@@ -17,7 +17,7 @@ public class DummyDataSeeder {
         SharedPreferences prefs = context.getSharedPreferences("dummy", Context.MODE_PRIVATE);
         boolean alreadySeeded = prefs.getBoolean("dummy_seeded", false);
 
-        //if (alreadySeeded) return;
+        if (alreadySeeded) return;
 
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(context);
