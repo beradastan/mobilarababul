@@ -57,9 +57,9 @@ public class CarListFragment extends Fragment {
             itemBinding.tvPrice.setText("Fiyat: " + car.price + " ₺");
 
             // FOTOĞRAF
-            if (car.imageUri != null) {
+            if (car.imageUris != null) {
                 Glide.with(requireContext())
-                        .load(Uri.parse(car.imageUri))
+                        .load(Uri.parse(car.imageUris.get(0)))
                         .into(itemBinding.imgCar);
 
             }

@@ -13,12 +13,22 @@
         <action
             android:id="@+id/action_loginFragment_to_carListFragment"
             app:destination="@id/carListFragment" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_adminFragment"
+            app:destination="@id/adminFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/carListFragment"
         android:name="com.example.mobilproje.ui.fragment.CarListFragment"
-        android:label="CarListFragment" />
+        android:label="CarListFragment">
+
+    <action
+        android:id="@+id/action_carListFragment_to_addCarFragment"
+        app:destination="@id/addCarFragment" />
+
+</fragment>
 
     <fragment
         android:id="@+id/addCarFragment"
@@ -45,6 +55,22 @@
         android:id="@+id/addBrandFragment"
         android:name="com.example.mobilproje.ui.fragment.AddBrandFragment"
         android:label="AddBrandFragment" />
+
+
+
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.example.mobilproje.ui.fragment.AdminFragment"
+        android:label="AdminFragment">
+
+        <action
+            android:id="@+id/action_adminFragment_to_addBrandFragment"
+            app:destination="@id/addBrandFragment" />
+
+        <action
+            android:id="@+id/action_adminFragment_to_carListFragment"
+            app:destination="@id/carListFragment" />
+    </fragment>
 
 
 </navigation>

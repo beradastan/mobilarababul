@@ -1,6 +1,8 @@
 package com.example.mobilproje;
 
 import android.os.Bundle;
+import com.example.mobilproje.util.AdminSeeder;
+import com.example.mobilproje.util.DummyDataSeeder;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,10 +17,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        AdminSeeder.seedAdminIfNotExists(this);
+
+        DummyDataSeeder.seed(this);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
     }
 }

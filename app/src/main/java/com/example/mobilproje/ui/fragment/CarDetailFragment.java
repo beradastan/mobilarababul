@@ -40,9 +40,12 @@ public class CarDetailFragment extends Fragment {
                 binding.tvPrice.setText("Fiyat: " + car.price + " ₺");
                 binding.tvDescription.setText("Açıklama: " + car.description);
 
-                if (car.imageUri != null) {
-                    Glide.with(this).load(Uri.parse(car.imageUri)).into(binding.imgCar);
+                if (car.imageUris != null && !car.imageUris.isEmpty()) {
+                    Glide.with(this)
+                            .load(Uri.parse(car.imageUris.get(0))) // ilk fotoğraf
+                            .into(binding.imgCar);
                 }
+
             }
         }
     }

@@ -32,6 +32,9 @@ public class CarViewModel extends AndroidViewModel {
         return allCars;
     }
 
+
+
+
     public void insert(Car car) {
         executorService.execute(() -> db.carDao().insert(car));
     }
