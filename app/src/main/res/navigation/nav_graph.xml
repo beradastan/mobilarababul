@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/LoginFragment">
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="com.example.mobilproje.ui.fragment.LoginFragment"
+        android:label="LoginFragment">
+
+        <!-- GEÇİŞ BURADA EKLENDİ -->
+        <action
+            android:id="@+id/action_loginFragment_to_carListFragment"
+            app:destination="@id/CarListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CarListFragment"
+        android:name="com.example.mobilproje.ui.fragment.CarListFragment"
+        android:label="CarListFragment" />
+
+    <fragment
+        android:id="@+id/AddCarFragment"
+        android:name="com.example.mobilproje.ui.fragment.AddCarFragment"
+        android:label="AddCarFragment">
+
+        <action
+            android:id="@+id/action_addCarFragment_to_carListFragment"
+            app:destination="@id/CarListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/carDetailFragment"
+        android:name="com.example.mobilproje.ui.fragment.CarDetailFragment"
+        android:label="CarDetailFragment" >
+
+    <!-- ve geçiş -->
+    <action
+        android:id="@+id/action_carListFragment_to_carDetailFragment"
+        app:destination="@id/carDetailFragment" />
+    </fragment>
+
+</navigation>
