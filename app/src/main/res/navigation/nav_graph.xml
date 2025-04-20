@@ -2,32 +2,32 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/LoginFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/LoginFragment"
+        android:id="@+id/loginFragment"
         android:name="com.example.mobilproje.ui.fragment.LoginFragment"
         android:label="LoginFragment">
 
         <!-- GEÇİŞ BURADA EKLENDİ -->
         <action
             android:id="@+id/action_loginFragment_to_carListFragment"
-            app:destination="@id/CarListFragment" />
+            app:destination="@id/carListFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/CarListFragment"
+        android:id="@+id/carListFragment"
         android:name="com.example.mobilproje.ui.fragment.CarListFragment"
         android:label="CarListFragment" />
 
     <fragment
-        android:id="@+id/AddCarFragment"
+        android:id="@+id/addCarFragment"
         android:name="com.example.mobilproje.ui.fragment.AddCarFragment"
-        android:label="AddCarFragment">
+        android:label="addCarFragment">
 
         <action
             android:id="@+id/action_addCarFragment_to_carListFragment"
-            app:destination="@id/CarListFragment" />
+            app:destination="@id/carListFragment" />
     </fragment>
 
     <fragment
@@ -40,5 +40,11 @@
         android:id="@+id/action_carListFragment_to_carDetailFragment"
         app:destination="@id/carDetailFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/addBrandFragment"
+        android:name="com.example.mobilproje.ui.fragment.AddBrandFragment"
+        android:label="AddBrandFragment" />
+
 
 </navigation>
