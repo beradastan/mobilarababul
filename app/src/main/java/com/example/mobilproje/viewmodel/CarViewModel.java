@@ -46,4 +46,12 @@ public class CarViewModel extends AndroidViewModel {
     public void insert(Car car) {
         executorService.execute(() -> db.carDao().insert(car));
     }
+
+
+    public LiveData<List<Car>> getFilteredCars(int brandId, Integer minYear, Integer maxYear, Integer minPrice, Integer maxPrice, Integer minKm, Integer maxKm) {
+        return carDao.getFilteredCars(brandId, minYear, maxYear, minPrice, maxPrice, minKm, maxKm);
+    }
+
+
+
 }

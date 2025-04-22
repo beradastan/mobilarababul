@@ -20,4 +20,7 @@ public interface BrandDao {
 
     @Query("SELECT * FROM brands WHERE id = :id")
     Brand getBrandById(int id);
+
+    @Query("DELETE FROM brands")
+    void deleteAllBrands();
 }

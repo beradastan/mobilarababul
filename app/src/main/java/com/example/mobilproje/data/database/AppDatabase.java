@@ -14,7 +14,7 @@ import com.example.mobilproje.data.model.Brand;
 import com.example.mobilproje.data.model.Car;
 import com.example.mobilproje.data.model.User;
 
-@Database(entities = {Car.class, Brand.class, User.class}, version = 2)
+@Database(entities = {Car.class, Brand.class, User.class}, version = 3)
 @TypeConverters({Converters.class})
 
 public abstract class AppDatabase extends RoomDatabase {

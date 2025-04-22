@@ -1,20 +1,127 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddCar"
-        android:layout_width="wrap_content"
+    <!-- Horizontal layout for FAB and Filter Button -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:contentDescription="Yeni Araç Ekle"
-        android:tint="@android:color/white"/>
+        android:gravity="end|bottom">
 
+        <!-- Filter Button -->
+        <Button
+            android:id="@+id/btnFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtrele"
+            android:layout_marginEnd="16dp"/>
+
+        <!-- Add Car Floating Action Button -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddCar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Yeni Araç Ekle"
+            android:tint="@android:color/white"
+            android:layout_marginEnd="16dp" />
+    </LinearLayout>
+
+    <!-- Filter Layout, hidden initially -->
+    <LinearLayout
+        android:id="@+id/filterLayout"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <!-- Marka Spinner -->
+        <Spinner
+            android:id="@+id/spinnerBrands"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Yıl aralığı -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etMinYear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Min Yıl"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/etMaxYear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Max Yıl"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <!-- Fiyat aralığı -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etMinPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Min Fiyat"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/etMaxPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Max Fiyat"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <!-- KM aralığı -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etMinKm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Min KM"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/etMaxKm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Max KM"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <!-- Filtre uygulama butonu -->
+        <Button
+            android:id="@+id/btnApplyFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Filtre Uygula" />
+    </LinearLayout>
+
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCars"
         android:layout_width="match_parent"
