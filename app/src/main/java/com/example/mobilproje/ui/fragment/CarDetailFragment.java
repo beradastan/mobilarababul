@@ -45,7 +45,6 @@ public class CarDetailFragment extends Fragment {
                             .load(Uri.parse(car.imageUris.get(0))) // ilk fotoğraf
                             .into(binding.imgCar);
                 }
-
             }
         }
     }

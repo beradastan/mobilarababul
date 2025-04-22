@@ -21,6 +21,7 @@ import com.example.mobilproje.databinding.FragmentCarListBinding;
 import com.example.mobilproje.databinding.ItemCarBinding;
 import com.example.mobilproje.viewmodel.CarViewModel;
 import com.example.mobilproje.data.model.Car;
+import com.example.mobilproje.data.model.Brand;
 
 import java.util.List;
 
@@ -95,15 +96,23 @@ public class CarListFragment extends Fragment {
             }
 
             void bind(Car car) {
-                itemBinding.tvBrand.setText("Marka ID: " + car.brandId);
+                // Set car details
                 itemBinding.tvModel.setText("Model: " + car.model);
                 itemBinding.tvYear.setText("Yıl: " + car.year);
                 itemBinding.tvKm.setText("KM: " + car.km);
                 itemBinding.tvPrice.setText("Fiyat: " + car.price + " ₺");
 
+                // Fetch brand name using brandId
+                carViewModel.getBrandById(car.brandId).observe(getViewLifecycleOwner(), brand -> {
+                    if (brand != null) {
+                        itemBinding.tvBrand.setText("Marka: " + brand.name);  // Set the brand name
+                    }
+                });
+
+                // Set car image
                 if (car.imageUris != null && !car.imageUris.isEmpty()) {
                     Glide.with(requireContext())
-                            .load(Uri.parse(car.imageUris.get(0))) // İlk resmi göster
+                            .load(Uri.parse(car.imageUris.get(0))) // Show the first image
                             .into(itemBinding.imgCar);
                 }
 

@@ -6,6 +6,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.mobilproje.data.model.Brand;
 import com.example.mobilproje.data.model.Car;
 
 import java.util.List;
@@ -17,4 +18,10 @@ public interface CarDao {
 
     @Query("SELECT * FROM cars ORDER BY id DESC")
     LiveData<List<Car>> getAllCars();
+
+    @Query("SELECT * FROM brands WHERE id = :brandId")
+    LiveData<Brand> getBrandById(int brandId);
+
+
+
 }
