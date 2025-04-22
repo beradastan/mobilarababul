@@ -41,5 +41,27 @@ public interface CarDao {
 
 
 
+    @Query("SELECT * FROM cars ORDER BY price ASC")
+    LiveData<List<Car>> getSortedCarsByPriceAsc();  // Artan fiyat sıralaması
+
+    @Query("SELECT * FROM cars ORDER BY price DESC")
+    LiveData<List<Car>> getSortedCarsByPriceDesc(); // Azalan fiyat sıralaması
+
+    @Query("SELECT * FROM cars ORDER BY year ASC")
+    LiveData<List<Car>> getSortedCarsByYearAsc();  // Artan yıl sıralaması
+
+    @Query("SELECT * FROM cars ORDER BY year DESC")
+    LiveData<List<Car>> getSortedCarsByYearDesc(); // Azalan yıl sıralaması
+
+    @Query("SELECT * FROM cars ORDER BY km ASC")
+    LiveData<List<Car>> getSortedCarsByKmAsc();  // Artan kilometre sıralaması
+
+    @Query("SELECT * FROM cars ORDER BY km DESC")
+    LiveData<List<Car>> getSortedCarsByKmDesc(); // Azalan kilometre sıralaması
+
+
+
+
+
 
 }

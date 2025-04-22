@@ -54,4 +54,28 @@ public class CarViewModel extends AndroidViewModel {
 
 
 
+    public LiveData<List<Car>> getSortedCarsByPrice(boolean ascending) {
+        if (ascending) {
+            return carDao.getSortedCarsByPriceAsc();  // Artan fiyat sıralaması
+        } else {
+            return carDao.getSortedCarsByPriceDesc(); // Azalan fiyat sıralaması
+        }
+    }
+
+    public LiveData<List<Car>> getSortedCarsByKm(boolean ascending) {
+        if (ascending) {
+            return carDao.getSortedCarsByKmAsc();  // Artan kilometre sıralaması
+        } else {
+            return carDao.getSortedCarsByKmDesc(); // Azalan kilometre sıralaması
+        }
+    }
+
+    public LiveData<List<Car>> getSortedCarsByYear(boolean ascending) {
+        if (ascending) {
+            return carDao.getSortedCarsByYearAsc();  // Artan yıl sıralaması
+        } else {
+            return carDao.getSortedCarsByYearDesc(); // Azalan yıl sıralaması
+        }
+    }
+
 }

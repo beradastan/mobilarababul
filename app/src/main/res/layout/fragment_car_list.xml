@@ -15,15 +15,23 @@
         <Button
             android:id="@+id/btnFilter"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Filtrele"
             android:layout_marginEnd="16dp"/>
 
+        <Button
+            android:id="@+id/btnSort"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Sırala"
+            android:layout_marginEnd="16dp" />
+
         <!-- Add Car Floating Action Button -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <Button
             android:id="@+id/fabAddCar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="İlan Ekle"
             android:contentDescription="Yeni Araç Ekle"
             android:tint="@android:color/white"
             android:layout_marginEnd="16dp" />

@@ -3,9 +3,11 @@ package com.example.mobilproje.ui.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 import android.widget.EditText;
 
@@ -26,6 +28,7 @@ import com.example.mobilproje.viewmodel.CarViewModel;
 import com.example.mobilproje.data.model.Car;
 import com.example.mobilproje.data.model.Brand;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarListFragment extends Fragment {
@@ -54,11 +57,88 @@ public class CarListFragment extends Fragment {
         }
     }
 
+    // RecyclerView güncelleme işlemi
+    private void updateRecyclerView(List<Car> cars) {
+        if (cars != null && !cars.isEmpty()) {
+            CarListAdapter adapter = new CarListAdapter(cars);
+            binding.recyclerViewCars.setAdapter(adapter);  // Veriyi RecyclerView'a bağla
+        } else {
+            Toast.makeText(getContext(), "İlan bulunamadı", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+
+        binding.btnSort.setOnClickListener(v -> {
+            // PopupMenu'yi oluşturuyoruz
+            PopupMenu popupMenu = new PopupMenu(getContext(), binding.btnSort);
+            Menu menu = popupMenu.getMenu();
+
+            // Menüye sıralama seçeneklerini ekliyoruz
+            menu.add(Menu.NONE, 0, 0, "Fiyata Göre Azalan");
+            menu.add(Menu.NONE, 1, 1, "Fiyata Göre Artan");
+            menu.add(Menu.NONE, 2, 2, "Kilometreye Göre Azalan");
+            menu.add(Menu.NONE, 3, 3, "Kilometreye Göre Artan");
+            menu.add(Menu.NONE, 4, 4, "Yıla Göre Azalan");
+            menu.add(Menu.NONE, 5, 5, "Yıla Göre Artan");
+
+            // Menü öğesine tıklanıldığında yapılacak işlemi belirliyoruz
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case 0:  // Fiyata Göre Azalan
+                        carViewModel.getSortedCarsByPrice(false).observe(getViewLifecycleOwner(), cars -> updateRecyclerView(cars));
+                        Toast.makeText(getContext(), "Fiyata Göre Azalan", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case 1:  // Fiyata Göre Artan
+                        carViewModel.getSortedCarsByPrice(true).observe(getViewLifecycleOwner(), cars -> updateRecyclerView(cars));
+                        Toast.makeText(getContext(), "Fiyata Göre Artan", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case 2:  // Kilometreye Göre Azalan
+                        carViewModel.getSortedCarsByKm(false).observe(getViewLifecycleOwner(), cars -> updateRecyclerView(cars));
+                        Toast.makeText(getContext(), "Kilometreye Göre Azalan", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case 3:  // Kilometreye Göre Artan
+                        carViewModel.getSortedCarsByKm(true).observe(getViewLifecycleOwner(), cars -> updateRecyclerView(cars));
+                        Toast.makeText(getContext(), "Kilometreye Göre Artan", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case 4:  // Yıla Göre Azalan
+                        carViewModel.getSortedCarsByYear(false).observe(getViewLifecycleOwner(), cars -> updateRecyclerView(cars));
+                        Toast.makeText(getContext(), "Yıla Göre Azalan", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case 5:  // Yıla Göre Artan
+                        carViewModel.getSortedCarsByYear(true).observe(getViewLifecycleOwner(), cars -> updateRecyclerView(cars));
+                        Toast.makeText(getContext(), "Yıla Göre Artan", Toast.LENGTH_SHORT).show();
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+
+            // Menü gösteriyoruz
+            popupMenu.show();
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -84,9 +164,9 @@ public class CarListFragment extends Fragment {
         binding.btnApplyFilters.setOnClickListener(v -> {
             // Seçilen marka bilgisi
             Brand selectedBrand = (Brand) binding.spinnerBrands.getSelectedItem();
-            int selectedBrandId = (selectedBrand != null) ? selectedBrand.getId() : -1; // Brand id
+            int selectedBrandId = (selectedBrand != null && !selectedBrand.getName().equals("Hepsi")) ? selectedBrand.getId() : -1; // "Hepsi" seçildiğinde -1 kullan
 
-            // Filtreler için parametreler
+            // Filtre değerlerini al
             Integer minYear = parseInteger(binding.etMinYear);
             Integer maxYear = parseInteger(binding.etMaxYear);
             Integer minPrice = parseInteger(binding.etMinPrice);
@@ -94,7 +174,7 @@ public class CarListFragment extends Fragment {
             Integer minKm = parseInteger(binding.etMinKm);
             Integer maxKm = parseInteger(binding.etMaxKm);
 
-            // Filtreleme işlemini ViewModel ile yapalım
+            // Filtreleme işlemi
             carViewModel.getFilteredCars(selectedBrandId, minYear, maxYear, minPrice, maxPrice, minKm, maxKm)
                     .observe(getViewLifecycleOwner(), cars -> {
                         if (cars != null && !cars.isEmpty()) {
@@ -109,14 +189,21 @@ public class CarListFragment extends Fragment {
             binding.filterLayout.setVisibility(View.GONE);
         });
 
+
         // Marka spinner'ını doldur
         brandViewModel.getAllBrands().observe(getViewLifecycleOwner(), brands -> {
             if (brands != null && !brands.isEmpty()) {
-                ArrayAdapter<Brand> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, brands);
+                // "Hepsi" seçeneğini ekliyoruz
+                List<Brand> allBrands = new ArrayList<>();
+                allBrands.add(new Brand("Hepsi"));  // "Hepsi" seçeneğini başa ekledik
+                allBrands.addAll(brands);
+
+                ArrayAdapter<Brand> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, allBrands);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 binding.spinnerBrands.setAdapter(adapter);
             }
         });
+
 
         // CarViewModel için ayarları yapıyoruz
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
