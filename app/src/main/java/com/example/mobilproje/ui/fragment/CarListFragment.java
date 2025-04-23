@@ -252,6 +252,9 @@ public class CarListFragment extends Fragment {
         class CarViewHolder extends RecyclerView.ViewHolder {
             private final ItemCarBinding itemBinding;
 
+
+
+
             CarViewHolder(ItemCarBinding binding) {
                 super(binding.getRoot());
                 this.itemBinding = binding;
@@ -279,11 +282,13 @@ public class CarListFragment extends Fragment {
                 }
 
                 itemBinding.getRoot().setOnClickListener(v -> {
+                    // Pass the car ID to the next fragment
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("car", car);
+                    bundle.putInt("carId", car.getId());  // Pass the car ID
 
+                    // Navigate to CarDetailFragment
                     NavHostFragment.findNavController(CarListFragment.this)
-                            .navigate(R.id.action_carListFragment_to_carDetailFragment, bundle);
+                            .navigate(R.id.action_carListFragment_to_carDetailFragment, bundle);  // Navigate to CarDetailFragment
                 });
             }
         }

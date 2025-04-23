@@ -41,6 +41,9 @@ public class CarViewModel extends AndroidViewModel {
         return carDao.getBrandById(brandId);  // Directly query the DAO
     }
 
+    public LiveData<Car> getCarById(int carId) {
+        return carDao.getCarById(carId);
+    }
 
 
     public void insert(Car car) {
@@ -76,6 +79,12 @@ public class CarViewModel extends AndroidViewModel {
         } else {
             return carDao.getSortedCarsByYearDesc(); // Azalan yıl sıralaması
         }
+    }
+
+
+    // Method to delete a car by ID
+    public void deleteCarById(int carId) {
+        carDao.deleteCar(carId); // Calls the repository to delete the car
     }
 
 }

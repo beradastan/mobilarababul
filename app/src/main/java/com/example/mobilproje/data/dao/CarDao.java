@@ -16,6 +16,9 @@ public interface CarDao {
     @Insert
     void insert(Car car);
 
+    @Query("SELECT * FROM cars WHERE id = :carId")
+    LiveData<Car> getCarById(int carId);
+
     @Query("SELECT * FROM cars ORDER BY id DESC")
     LiveData<List<Car>> getAllCars();
 
@@ -60,7 +63,8 @@ public interface CarDao {
     LiveData<List<Car>> getSortedCarsByKmDesc(); // Azalan kilometre sıralaması
 
 
-
+    @Query("DELETE FROM cars WHERE id = :carId")
+    void deleteCarById(int carId);
 
 
 

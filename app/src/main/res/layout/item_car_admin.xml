@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@android:color/darker_gray"
+    android:layout_marginBottom="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Araç Fotoğrafı -->
+    <ImageView
+        android:id="@+id/imgCar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Araç fotoğrafı"
+        android:layout_marginEnd="12dp" /> <!-- Fotoğraf ile metin arasına boşluk -->
+
+    <!-- Araç Detayları -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"> <!-- Detaylar sağa yayılacak -->
+
+        <TextView
+            android:id="@+id/tvBrand"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Marka" />
+
+        <TextView
+            android:id="@+id/tvModel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Model" />
+
+        <TextView
+            android:id="@+id/tvYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yıl" />
+
+        <TextView
+            android:id="@+id/tvKm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KM" />
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fiyat" />
+
+        <!-- Delete button -->
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</LinearLayout>

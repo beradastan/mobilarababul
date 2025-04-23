@@ -46,4 +46,71 @@ public class Car implements Serializable {
         this.imageUris = imageUris;
         this.userId = userId;
     }
+
+
+    // Getter methods
+    public int getId() {
+        return id;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getKm() {
+        return km;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<String> getImageUris() {
+        return imageUris;
+    }
+
+    public int getBrandId() {
+        return brandId;
+    }
+
+    // You may also want setters if you are modifying these values
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public void setKm(int km) {
+        this.km = km;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setImageUris(List<String> imageUris) {
+        this.imageUris = imageUris;
+    }
+
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
+    }
 }

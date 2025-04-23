@@ -42,6 +42,10 @@ public class AddCarFragment extends Fragment {
     private final List<Uri> selectedImageUris = new ArrayList<>();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
+
+
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAddCarBinding.inflate(inflater, container, false);
