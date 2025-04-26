@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.mobilproje.R;
 import com.example.mobilproje.data.model.Brand;
 import com.example.mobilproje.data.model.Car;
 import com.example.mobilproje.data.model.User;
@@ -26,6 +28,8 @@ import com.example.mobilproje.viewmodel.BrandViewModel;
 import com.example.mobilproje.viewmodel.CarViewModel;
 import com.example.mobilproje.viewmodel.UserViewModel;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -42,9 +46,22 @@ public class AddCarFragment extends Fragment {
     private final List<Uri> selectedImageUris = new ArrayList<>();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
+    private boolean isEditMode = false;
+    private int editCarId = -1;
+    private Car existingCar;
 
-
-
+    private String uriToBase64(Uri uri) {
+        try {
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            inputStream.close();
+            return Base64.encodeToString(bytes, Base64.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,11 +77,20 @@ public class AddCarFragment extends Fragment {
         brandViewModel = new ViewModelProvider(this).get(BrandViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
+        if (getArguments() != null && getArguments().containsKey("carId")) {
+            isEditMode = true;
+            editCarId = getArguments().getInt("carId");
+        }
+
         brandViewModel.getAllBrands().observe(getViewLifecycleOwner(), brands -> {
             brandList = brands;
             ArrayAdapter<Brand> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, brands);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             binding.spinnerBrand.setAdapter(adapter);
+
+            if (isEditMode) {
+                loadCarData();
+            }
         });
 
         binding.imgCar.setOnClickListener(v -> {
@@ -76,7 +102,7 @@ public class AddCarFragment extends Fragment {
 
         binding.btnSave.setOnClickListener(v -> {
             int brandPosition = binding.spinnerBrand.getSelectedItemPosition();
-            if (brandPosition == -1 || selectedImageUris.isEmpty()) {
+            if (brandPosition == -1 || (selectedImageUris.isEmpty() && !isEditMode)) {
                 Toast.makeText(requireContext(), "Lütfen tüm alanları doldurun ve fotoğraf seçin", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -88,26 +114,62 @@ public class AddCarFragment extends Fragment {
             int price = Integer.parseInt(binding.etPrice.getText().toString());
             String description = binding.etDescription.getText().toString();
 
-            // Kullanıcıyı bul (SharedPreferences'tan)
             String username = requireContext().getSharedPreferences("user", Context.MODE_PRIVATE).getString("username", "");
 
             executor.execute(() -> {
                 User currentUser = userViewModel.getUserByUsername(username);
                 if (currentUser != null) {
-                    List<String> imageStrings = new ArrayList<>();
-                    for (Uri uri : selectedImageUris) {
-                        imageStrings.add(uri.toString());
+                    List<String> imageBase64List = new ArrayList<>();
+                    if (!selectedImageUris.isEmpty()) {
+                        for (Uri uri : selectedImageUris) {
+                            String imageBase64 = uriToBase64(uri);
+                            if (imageBase64 != null) {
+                                imageBase64List.add(imageBase64);
+                            }
+                        }
+                    } else if (isEditMode) {
+                        imageBase64List = existingCar.getImageBase64List();
                     }
 
-                    Car car = new Car(selectedBrand.id, model, year, km, price, description, imageStrings, currentUser.id);
-                    carViewModel.insert(car);
+                    Car car = new Car(selectedBrand.id, model, year, km, price, description, imageBase64List, currentUser.id);
+                    if (isEditMode) {
+                        car.setId(editCarId);
+                        carViewModel.update(car);
+                    } else {
+                        carViewModel.insert(car);
+                    }
 
                     requireActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Araç eklendi!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), isEditMode ? "Araç güncellendi!" : "Araç eklendi!", Toast.LENGTH_SHORT).show();
                         NavHostFragment.findNavController(this).navigateUp();
                     });
                 }
             });
+        });
+    }
+
+    private void loadCarData() {
+        carViewModel.getCarById(editCarId).observe(getViewLifecycleOwner(), car -> {
+            if (car != null) {
+                existingCar = car;
+                binding.etModel.setText(car.getModel());
+                binding.etYear.setText(String.valueOf(car.getYear()));
+                binding.etKm.setText(String.valueOf(car.getKm()));
+                binding.etPrice.setText(String.valueOf(car.getPrice()));
+                binding.etDescription.setText(car.getDescription());
+
+                if (car.getImageBase64List() != null && !car.getImageBase64List().isEmpty()) {
+                    byte[] decodedString = Base64.decode(car.getImageBase64List().get(0), Base64.DEFAULT);
+                    binding.imgCar.setImageBitmap(android.graphics.BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+                }
+
+                for (int i = 0; i < brandList.size(); i++) {
+                    if (brandList.get(i).getId() == car.getBrandId()) {
+                        binding.spinnerBrand.setSelection(i);
+                        break;
+                    }
+                }
+            }
         });
     }
 
@@ -127,7 +189,6 @@ public class AddCarFragment extends Fragment {
                     selectedImageUris.add(data.getData());
                 }
 
-                // İlk resmi imageView'de göster (temsilî amaçlı)
                 if (!selectedImageUris.isEmpty()) {
                     binding.imgCar.setImageURI(selectedImageUris.get(0));
                 }

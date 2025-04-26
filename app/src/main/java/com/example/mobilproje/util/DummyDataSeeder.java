@@ -34,39 +34,7 @@ public class DummyDataSeeder {
             Brand ford = new Brand("Ford");
             db.brandDao().insert(ford);
 
-            // Dummy araçlar (markaları zaten veritabanında mevcut olanları kullanıyoruz)
-            db.carDao().insert(new Car(
-                    renault.getId(),
-                    "Clio",
-                    2020,
-                    50000,
-                    450000,
-                    "Temiz aile arabası",
-                    Collections.singletonList("android.resource://com.example.mobilproje/drawable/car_sample"),
-                    1
-            ));
 
-            db.carDao().insert(new Car(
-                    toyota.getId(),
-                    "Corolla",
-                    2019,
-                    60000,
-                    500000,
-                    "Dizel, sorunsuz",
-                    Collections.singletonList("android.resource://com.example.mobilproje/drawable/car_sample"),
-                    1
-            ));
-
-            db.carDao().insert(new Car(
-                    ford.getId(),
-                    "Focus",
-                    2017,
-                    98000,
-                    375000,
-                    "Yeni muayene, masrafsız",
-                    Collections.singletonList("android.resource://com.example.mobilproje/drawable/car_sample"),
-                    1
-            ));
 
             // Bir daha çalışmasın diye işaretle
             prefs.edit().putBoolean("dummy_seeded", true).apply();

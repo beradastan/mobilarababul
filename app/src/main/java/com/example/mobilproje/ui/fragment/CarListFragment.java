@@ -2,6 +2,7 @@ package com.example.mobilproje.ui.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -27,15 +28,19 @@ import com.example.mobilproje.viewmodel.BrandViewModel;
 import com.example.mobilproje.viewmodel.CarViewModel;
 import com.example.mobilproje.data.model.Car;
 import com.example.mobilproje.data.model.Brand;
+import com.example.mobilproje.viewmodel.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CarListFragment extends Fragment {
     private BrandViewModel brandViewModel;  // BrandViewModel'i ekliyoruz
 
     private FragmentCarListBinding binding;
     private CarViewModel carViewModel;
+    private UserViewModel userViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +65,7 @@ public class CarListFragment extends Fragment {
     // RecyclerView güncelleme işlemi
     private void updateRecyclerView(List<Car> cars) {
         if (cars != null && !cars.isEmpty()) {
-            CarListAdapter adapter = new CarListAdapter(cars);
+            CarListAdapter adapter = new CarListAdapter(cars , userViewModel);
             binding.recyclerViewCars.setAdapter(adapter);  // Veriyi RecyclerView'a bağla
         } else {
             Toast.makeText(getContext(), "İlan bulunamadı", Toast.LENGTH_SHORT).show();
@@ -127,6 +132,10 @@ public class CarListFragment extends Fragment {
 
         // BrandViewModel'i enjekte ediyoruz
         brandViewModel = new ViewModelProvider(this).get(BrandViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+
+
 
         // Filtreleme butonuna tıklama işlemi
         binding.btnFilter.setOnClickListener(v -> {
@@ -160,7 +169,7 @@ public class CarListFragment extends Fragment {
             carViewModel.getFilteredCars(selectedBrandId, minYear, maxYear, minPrice, maxPrice, minKm, maxKm)
                     .observe(getViewLifecycleOwner(), cars -> {
                         if (cars != null && !cars.isEmpty()) {
-                            CarListAdapter adapter = new CarListAdapter(cars);
+                            CarListAdapter adapter = new CarListAdapter(cars , userViewModel);
                             binding.recyclerViewCars.setAdapter(adapter);  // Filtrelenmiş araçları RecyclerView'a bağla
                         } else {
                             Toast.makeText(getContext(), "No cars found with the selected filters", Toast.LENGTH_SHORT).show();
@@ -170,6 +179,11 @@ public class CarListFragment extends Fragment {
             // Filtre alanını gizle
             binding.filterLayout.setVisibility(View.GONE);
         });
+
+        binding.btnProfile.setOnClickListener(v -> {
+            NavHostFragment.findNavController(this).navigate(R.id.action_carListFragment_to_profileFragment);
+        });
+
 
 
         // Marka spinner'ını doldur
@@ -196,7 +210,7 @@ public class CarListFragment extends Fragment {
         // Verileri gözlemle ve RecyclerView adapter'ı bağla
         carViewModel.getAllCars().observe(getViewLifecycleOwner(), cars -> {
             if (cars != null && !cars.isEmpty()) {
-                CarListAdapter adapter = new CarListAdapter(cars);
+                CarListAdapter adapter = new CarListAdapter(cars , userViewModel);
                 binding.recyclerViewCars.setAdapter(adapter); // Adapter'ı buraya bağladık
             } else {
                 Toast.makeText(getContext(), "İlan bulunamadı", Toast.LENGTH_SHORT).show();
@@ -207,9 +221,12 @@ public class CarListFragment extends Fragment {
 
     private class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewHolder> {
         private final List<Car> carList;
+        private final UserViewModel userViewModel;
 
-        CarListAdapter(List<Car> carList) {
+
+        public CarListAdapter(List<Car> carList, UserViewModel userViewModel) {
             this.carList = carList;
+            this.userViewModel = userViewModel;
         }
 
         @NonNull
@@ -244,22 +261,39 @@ public class CarListFragment extends Fragment {
 
             void bind(Car car) {
                 // Set car details
-                itemBinding.tvModel.setText("Model: " + car.model);
+                /*itemBinding.tvModel.setText("Model: " + car.model);
                 itemBinding.tvYear.setText("Yıl: " + car.year);
-                itemBinding.tvKm.setText("KM: " + car.km);
-                itemBinding.tvPrice.setText("Fiyat: " + car.price + " ₺");
+                itemBinding.tvKm.setText("KM: " + car.km);*/
+                itemBinding.tvDescription.setText(car.description);
 
-                // Fetch brand name using brandId
+                itemBinding.tvPrice.setText(car.price + " ₺");
                 carViewModel.getBrandById(car.brandId).observe(getViewLifecycleOwner(), brand -> {
                     if (brand != null) {
-                        itemBinding.tvBrand.setText("Marka: " + brand.name);  // Set the brand name
+                        itemBinding.tvBrandModel.setText(brand.name + " , " + car.model);  // Set the brand name
                     }
                 });
 
-                // Set car image
-                if (car.imageUris != null && !car.imageUris.isEmpty()) {
+                // Şehir bilgisi için artık LiveData kullanıyoruz:
+                userViewModel.getCityByUserIdLive(car.getUserId()).observe(getViewLifecycleOwner(), city -> {
+                    if (city != null) {
+                        itemBinding.tvCity.setText(city);
+                    } else {
+                        itemBinding.tvCity.setText("Bilinmiyor");
+                    }
+                });
+
+                // Fetch brand name using brandId
+                /*carViewModel.getBrandById(car.brandId).observe(getViewLifecycleOwner(), brand -> {
+                    if (brand != null) {
+                        itemBinding.tvBrand.setText("Marka: " + brand.name);  // Set the brand name
+                    }
+                });*/
+
+                if (car.imageBase64List != null && !car.imageBase64List.isEmpty()) {
+                    byte[] decodedBytes = Base64.decode(car.imageBase64List.get(0), Base64.DEFAULT);
                     Glide.with(requireContext())
-                            .load(Uri.parse(car.imageUris.get(0))) // Show the first image
+                            .asBitmap()
+                            .load(decodedBytes)
                             .into(itemBinding.imgCar);
                 }
 

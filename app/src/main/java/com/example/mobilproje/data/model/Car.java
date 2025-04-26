@@ -33,17 +33,26 @@ public class Car implements Serializable {
     public int km;
     public int price;
     public String description;
-    public List<String> imageUris; // Birden fazla fotoğrafın URI'ları
+
+    public List<String> getImageBase64List() {
+        return imageBase64List;
+    }
+
+    public void setImageBase64List(List<String> imageBase64List) {
+        this.imageBase64List = imageBase64List;
+    }
+
+    public List<String> imageBase64List;
     public int userId;
 
-    public Car(int brandId, String model, int year, int km, int price, String description, List<String> imageUris , int userId) {
+    public Car(int brandId, String model, int year, int km, int price, String description, List<String> imageBase64List, int userId) {
         this.brandId = brandId;
         this.model = model;
         this.year = year;
         this.km = km;
         this.price = price;
         this.description = description;
-        this.imageUris = imageUris;
+        this.imageBase64List = imageBase64List;
         this.userId = userId;
     }
 
@@ -73,9 +82,7 @@ public class Car implements Serializable {
         return description;
     }
 
-    public List<String> getImageUris() {
-        return imageUris;
-    }
+
 
     public int getBrandId() {
         return brandId;
@@ -110,9 +117,6 @@ public class Car implements Serializable {
         this.description = description;
     }
 
-    public void setImageUris(List<String> imageUris) {
-        this.imageUris = imageUris;
-    }
 
     public void setBrandId(int brandId) {
         this.brandId = brandId;

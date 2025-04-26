@@ -2,6 +2,7 @@ package com.example.mobilproje.ui.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -233,11 +234,15 @@ public class AdminFragment extends Fragment {
                     }
                 });
 
-                if (car.imageUris != null && !car.imageUris.isEmpty()) {
+                if (car.imageBase64List != null && !car.imageBase64List.isEmpty()) {
+                    byte[] decodedBytes = Base64.decode(car.imageBase64List.get(0), Base64.DEFAULT);
                     Glide.with(requireContext())
-                            .load(Uri.parse(car.imageUris.get(0)))
+                            .asBitmap()
+                            .load(decodedBytes)
                             .into(itemBinding.imgCar);
                 }
+
+
 
                 itemBinding.btnDelete.setOnClickListener(v -> {
                     db.carDao().deleteCarById(car.id);

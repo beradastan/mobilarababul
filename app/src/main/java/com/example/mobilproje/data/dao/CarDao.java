@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.mobilproje.data.model.Brand;
 import com.example.mobilproje.data.model.Car;
@@ -66,6 +67,11 @@ public interface CarDao {
     @Query("DELETE FROM cars WHERE id = :carId")
     void deleteCarById(int carId);
 
+    @Query("SELECT * FROM cars WHERE userId = :userId")
+    LiveData<List<Car>> getCarsByUserId(int userId);
+
+    @Update
+    void update(Car car);
 
 
 }

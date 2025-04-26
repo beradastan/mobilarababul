@@ -1,57 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:padding="12dp"
-    android:background="@android:color/darker_gray"
-    android:layout_marginBottom="8dp"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="8dp">
 
     <!-- Araç Fotoğrafı -->
     <ImageView
         android:id="@+id/imgCar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:scaleType="centerCrop"
         android:contentDescription="Araç fotoğrafı"
-        android:layout_marginEnd="12dp" /> <!-- Fotoğraf ile metin arasına boşluk -->
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintDimensionRatio="5:3" />
 
-    <!-- Araç Detayları -->
-    <LinearLayout
-        android:orientation="vertical"
+    <!-- Açıklama (Description) -->
+    <TextView
+        android:id="@+id/tvDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"> <!-- Detaylar sağa yayılacak -->
+        android:text="Açıklama"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintTop_toTopOf="@id/imgCar"
+        app:layout_constraintStart_toEndOf="@id/imgCar"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Marka ve Model -->
+    <TextView
+        android:id="@+id/tvBrandModel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Marka - Model"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/tvDescription"
+        app:layout_constraintStart_toEndOf="@id/imgCar"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Konum Bilgisi -->
+    <LinearLayout
+        android:id="@+id/layoutLocation"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toEndOf="@id/imgCar"
+        app:layout_constraintBottom_toBottomOf="@id/imgCar"
+        android:layout_marginStart="8dp">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@android:drawable/ic_menu_mylocation"
+            android:contentDescription="Konum" />
 
         <TextView
-            android:id="@+id/tvBrand"
-            android:textStyle="bold"
+            android:id="@+id/tvCity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Marka" />
-
-        <TextView
-            android:id="@+id/tvModel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Model" />
-
-        <TextView
-            android:id="@+id/tvYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yıl" />
-
-        <TextView
-            android:id="@+id/tvKm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="KM" />
-
-        <TextView
-            android:id="@+id/tvPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fiyat" />
+            android:text="Şehir"
+            android:textSize="14sp"
+            android:layout_marginStart="4dp"/>
     </LinearLayout>
-</LinearLayout>
+
+    <!-- Fiyat -->
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="₺ 250.000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/imgCar"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- İnce Ayırıcı Çizgi -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/imgCar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -87,4 +87,12 @@ public class CarViewModel extends AndroidViewModel {
         carDao.deleteCarById(carId); // Calls the repository to delete the car
     }
 
+    public LiveData<List<Car>> getCarsByUserId(int userId) {
+        return db.carDao().getCarsByUserId(userId);
+    }
+
+    public void update(Car car) {
+        Executors.newSingleThreadExecutor().execute(() -> db.carDao().update(car));
+    }
+
 }

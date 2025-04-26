@@ -2,7 +2,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="0dp">
 
     <!-- Horizontal layout for FAB and Filter Button -->
     <LinearLayout
@@ -11,20 +11,21 @@
         android:layout_height="wrap_content"
         android:gravity="end|bottom">
 
+
         <!-- Filter Button -->
         <Button
             android:id="@+id/btnFilter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Filtrele"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="0dp"/>
 
         <Button
             android:id="@+id/btnSort"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Sırala"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="0dp" />
 
         <!-- Add Car Floating Action Button -->
         <Button
@@ -34,7 +35,15 @@
             android:text="İlan Ekle"
             android:contentDescription="Yeni Araç Ekle"
             android:tint="@android:color/white"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="0dp" />
+
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Profil"
+            android:layout_marginEnd="0dp"/>
+
     </LinearLayout>
 
     <!-- Filter Layout, hidden initially -->

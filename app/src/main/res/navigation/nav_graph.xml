@@ -31,6 +31,10 @@
         <action
             android:id="@+id/action_carListFragment_to_carDetailFragment"
             app:destination="@id/carDetailFragment" />
+        <action
+            android:id="@+id/action_carListFragment_to_profileFragment"
+            app:destination="@id/ProfileFragment" />
+
 
 </fragment>
 
@@ -74,6 +78,20 @@
         <action
             android:id="@+id/action_adminFragment_to_carListFragment"
             app:destination="@id/carListFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.example.mobilproje.ui.fragment.ProfileFragment"
+        android:label="AdminFragment">
+
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_addCarFragment"
+            app:destination="@id/addCarFragment" />
 
 
 
