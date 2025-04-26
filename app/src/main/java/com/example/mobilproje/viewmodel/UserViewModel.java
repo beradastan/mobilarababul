@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.example.mobilproje.data.database.AppDatabase;
 import com.example.mobilproje.data.model.User;
@@ -31,5 +32,11 @@ public class UserViewModel extends AndroidViewModel {
     public User getUserByUsername(String username) {
         return db.userDao().getUserByUsername(username);
     }
+
+
+    public LiveData<User> getUserById(int userId) {
+        return db.userDao().getUserById(userId);
+    }
+
 }
 

@@ -84,7 +84,7 @@ public class CarViewModel extends AndroidViewModel {
 
     // Method to delete a car by ID
     public void deleteCarById(int carId) {
-        carDao.deleteCar(carId); // Calls the repository to delete the car
+        carDao.deleteCarById(carId); // Calls the repository to delete the car
     }
 
 }

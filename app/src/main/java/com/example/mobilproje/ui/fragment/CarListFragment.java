@@ -125,24 +125,6 @@ public class CarListFragment extends Fragment {
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // BrandViewModel'i enjekte ediyoruz
         brandViewModel = new ViewModelProvider(this).get(BrandViewModel.class);
 

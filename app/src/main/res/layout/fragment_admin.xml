@@ -1,20 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnGoToAddBrand"
-        android:text="Marka Ekle"
+    <!-- Üst Butonlar (Filtrele, Sırala, Marka Ekle) -->
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="end|bottom">
 
-    <Button
-        android:id="@+id/btnGoToAllCars"
-        android:text="Tüm Araçları Gör"
-        android:layout_marginTop="16dp"
+        <Button
+            android:id="@+id/btnFilterAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Filtrele"
+            android:layout_marginEnd="16dp"/>
+
+        <Button
+            android:id="@+id/btnSortAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Sırala"
+            android:layout_marginEnd="16dp" />
+
+        <Button
+            android:id="@+id/btnGoToAddBrand"
+            android:text="Marka Ekle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Filtre Alanı -->
+    <LinearLayout
+        android:id="@+id/filterLayoutAdmin"
+        android:orientation="vertical"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <Spinner
+            android:id="@+id/spinnerBrandsAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etMinYearAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Min Yıl"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/etMaxYearAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Max Yıl"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etMinPriceAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Min Fiyat"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/etMaxPriceAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Max Fiyat"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etMinKmAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Min KM"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/etMaxKmAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Max KM"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnApplyFiltersAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Filtre Uygula" />
+    </LinearLayout>
+
+    <!-- RecyclerView: Araçlar -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewAdminCars"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

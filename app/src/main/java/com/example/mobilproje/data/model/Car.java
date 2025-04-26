@@ -81,6 +81,10 @@ public class Car implements Serializable {
         return brandId;
     }
 
+    public int getUserId(){
+        return userId;
+    }
+
     // You may also want setters if you are modifying these values
     public void setId(int id) {
         this.id = id;
