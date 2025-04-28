@@ -95,4 +95,8 @@ public class CarViewModel extends AndroidViewModel {
         Executors.newSingleThreadExecutor().execute(() -> db.carDao().update(car));
     }
 
+    public LiveData<List<Car>> getCarsByIds(List<Integer> ids) {
+        return carDao.getCarsByIds(ids);
+    }
+
 }

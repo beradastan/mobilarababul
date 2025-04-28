@@ -34,6 +34,45 @@ public class Car implements Serializable {
     public int price;
     public String description;
 
+    public String getTransmissionType() {
+        return transmissionType;
+    }
+
+    public void setTransmissionType(String transmissionType) {
+        this.transmissionType = transmissionType;
+    }
+
+    public String getFuelType() {
+        return fuelType;
+    }
+
+    public void setFuelType(String fuelType) {
+        this.fuelType = fuelType;
+    }
+
+    public String transmissionType;
+    public String fuelType;
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String color;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String title;
+
     public List<String> getImageBase64List() {
         return imageBase64List;
     }
@@ -45,7 +84,7 @@ public class Car implements Serializable {
     public List<String> imageBase64List;
     public int userId;
 
-    public Car(int brandId, String model, int year, int km, int price, String description, List<String> imageBase64List, int userId) {
+    public Car(int brandId, String model, int year, int km, int price, String description, List<String> imageBase64List, int userId , String title , String color , String transmissionType, String fuelType ) {
         this.brandId = brandId;
         this.model = model;
         this.year = year;
@@ -54,6 +93,10 @@ public class Car implements Serializable {
         this.description = description;
         this.imageBase64List = imageBase64List;
         this.userId = userId;
+        this.title = title;
+        this.color = color;
+        this.transmissionType = transmissionType;
+        this.fuelType = fuelType;
     }
 
 

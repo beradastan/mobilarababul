@@ -17,6 +17,11 @@
             android:background="#CCCCCC"
             android:contentDescription="Araç fotoğrafı"
             android:layout_marginBottom="12dp" />
+        <EditText
+            android:id="@+id/etTitle"
+            android:hint="Başlık"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Spinner
             android:id="@+id/spinnerBrand"
@@ -43,6 +48,25 @@
             android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/etSpinnerColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"/>
+
+        <Spinner
+            android:id="@+id/etSpinnerTransmission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"/>
+
+        <Spinner
+            android:id="@+id/etSpinnerFuel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"/>
+
 
         <EditText
             android:id="@+id/etPrice"

@@ -12,18 +12,12 @@ public class Brand {
     public int id;
 
     public String name;
-    public String logoUrl;
 
-    @Ignore
+
+
+
     public Brand(String name) {
         this.name = name;
-        this.logoUrl = "";
-    }
-
-
-    public Brand(String name, String logoUrl) {
-        this.name = name;
-        this.logoUrl = logoUrl;
     }
 
     @Override

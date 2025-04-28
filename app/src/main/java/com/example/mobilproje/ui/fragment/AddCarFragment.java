@@ -27,6 +27,8 @@ import com.example.mobilproje.databinding.FragmentAddCarBinding;
 import com.example.mobilproje.viewmodel.BrandViewModel;
 import com.example.mobilproje.viewmodel.CarViewModel;
 import com.example.mobilproje.viewmodel.UserViewModel;
+import com.example.mobilproje.util.Constants;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +51,10 @@ public class AddCarFragment extends Fragment {
     private boolean isEditMode = false;
     private int editCarId = -1;
     private Car existingCar;
+
+
+
+
 
     private String uriToBase64(Uri uri) {
         try {
@@ -82,6 +88,22 @@ public class AddCarFragment extends Fragment {
             editCarId = getArguments().getInt("carId");
         }
 
+        // Renk spinnerı
+        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Constants.COLOR_OPTIONS);
+        colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.etSpinnerColor.setAdapter(colorAdapter);
+
+        // Vites spinnerı
+        ArrayAdapter<String> transmissionAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Constants.TRANSMISSION_OPTIONS);
+        transmissionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.etSpinnerTransmission.setAdapter(transmissionAdapter);
+
+        // Yakıt spinnerı
+        ArrayAdapter<String> fuelAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Constants.FUEL_OPTIONS);
+        fuelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.etSpinnerFuel.setAdapter(fuelAdapter);
+
+
         brandViewModel.getAllBrands().observe(getViewLifecycleOwner(), brands -> {
             brandList = brands;
             ArrayAdapter<Brand> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, brands);
@@ -113,8 +135,13 @@ public class AddCarFragment extends Fragment {
             int km = Integer.parseInt(binding.etKm.getText().toString());
             int price = Integer.parseInt(binding.etPrice.getText().toString());
             String description = binding.etDescription.getText().toString();
-
+            String title = binding.etTitle.getText().toString();
+            String selectedColor = binding.etSpinnerColor.getSelectedItem().toString();
             String username = requireContext().getSharedPreferences("user", Context.MODE_PRIVATE).getString("username", "");
+            String selectedTransmission = binding.etSpinnerTransmission.getSelectedItem().toString();
+            String selectedFuel = binding.etSpinnerFuel.getSelectedItem().toString();
+
+
 
             executor.execute(() -> {
                 User currentUser = userViewModel.getUserByUsername(username);
@@ -131,7 +158,7 @@ public class AddCarFragment extends Fragment {
                         imageBase64List = existingCar.getImageBase64List();
                     }
 
-                    Car car = new Car(selectedBrand.id, model, year, km, price, description, imageBase64List, currentUser.id);
+                    Car car = new Car(selectedBrand.id, model, year, km, price, description, imageBase64List, currentUser.id, title , selectedColor , selectedTransmission , selectedFuel);
                     if (isEditMode) {
                         car.setId(editCarId);
                         carViewModel.update(car);
@@ -157,6 +184,13 @@ public class AddCarFragment extends Fragment {
                 binding.etKm.setText(String.valueOf(car.getKm()));
                 binding.etPrice.setText(String.valueOf(car.getPrice()));
                 binding.etDescription.setText(car.getDescription());
+                binding.etTitle.setText(car.getTitle());
+
+
+                // Spinner seçimi
+                setSpinnerSelection(binding.etSpinnerColor, Constants.COLOR_OPTIONS, car.getColor());
+                setSpinnerSelection(binding.etSpinnerTransmission, Constants.TRANSMISSION_OPTIONS, car.getTransmissionType());
+                setSpinnerSelection(binding.etSpinnerFuel, Constants.FUEL_OPTIONS, car.getFuelType());
 
                 if (car.getImageBase64List() != null && !car.getImageBase64List().isEmpty()) {
                     byte[] decodedString = Base64.decode(car.getImageBase64List().get(0), Base64.DEFAULT);
@@ -171,6 +205,15 @@ public class AddCarFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void setSpinnerSelection(android.widget.Spinner spinner, String[] options, String value) {
+        for (int i = 0; i < options.length; i++) {
+            if (options[i].equalsIgnoreCase(value)) {
+                spinner.setSelection(i);
+                break;
+            }
+        }
     }
 
     @Override

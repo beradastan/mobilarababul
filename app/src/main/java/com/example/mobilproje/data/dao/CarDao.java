@@ -73,5 +73,9 @@ public interface CarDao {
     @Update
     void update(Car car);
 
+    @Query("SELECT * FROM cars WHERE id IN (:ids)")
+    LiveData<List<Car>> getCarsByIds(List<Integer> ids);
+
+
 
 }

@@ -214,16 +214,14 @@ public class AdminFragment extends Fragment {
             }
 
             void bind(Car car) {
-                itemBinding.tvModel.setText("Model: " + car.model);
-                itemBinding.tvYear.setText("Yıl: " + car.year);
-                itemBinding.tvKm.setText("KM: " + car.km);
-                itemBinding.tvPrice.setText("Fiyat: " + car.price + " ₺");
+
+                itemBinding.tvPrice.setText(car.price + " ₺");
                 itemBinding.tvDescription.setText(car.description);
                 itemBinding.tvUserId.setText("Kullanıcı ID: " + car.userId);
 
                 carViewModel.getBrandById(car.brandId).observe(getViewLifecycleOwner(), brand -> {
                     if (brand != null) {
-                        itemBinding.tvBrand.setText("Marka: " + brand.name);
+                        itemBinding.tvBrandModel.setText(brand.name + " , " + car.model);  // Set the brand name
                     }
                 });
 
@@ -231,6 +229,14 @@ public class AdminFragment extends Fragment {
                     if (user != null) {
                         itemBinding.tvUsername.setText("Kullanıcı: " + user.username);
                         itemBinding.tvUserId.setText("Kullanıcı ID: " + user.id);
+                    }
+                });
+
+                userViewModel.getCityByUserIdLive(car.getUserId()).observe(getViewLifecycleOwner(), city -> {
+                    if (city != null) {
+                        itemBinding.tvCity.setText(city);
+                    } else {
+                        itemBinding.tvCity.setText("Bilinmiyor");
                     }
                 });
 

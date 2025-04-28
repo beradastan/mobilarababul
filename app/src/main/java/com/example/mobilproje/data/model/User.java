@@ -2,6 +2,12 @@ package com.example.mobilproje.data.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.mobilproje.data.database.Converters;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "users")
 public class User {
@@ -16,6 +22,17 @@ public class User {
     public String phone;
     public String email;
     public String city;
+
+    public List<Integer> getFavoriteCarIds() {
+        return favoriteCarIds;
+    }
+
+    public void setFavoriteCarIds(List<Integer> favoriteCarIds) {
+        this.favoriteCarIds = favoriteCarIds;
+    }
+
+    @TypeConverters(Converters.class)
+    public List<Integer> favoriteCarIds = new ArrayList<>();
 
     public User(String username, String password) {
         this.username = username;

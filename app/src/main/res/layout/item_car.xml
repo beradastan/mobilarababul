@@ -64,7 +64,7 @@
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:src="@android:drawable/ic_menu_mylocation"
+            android:src="@drawable/baseline_location_on_24"
             android:contentDescription="Konum" />
 
         <TextView

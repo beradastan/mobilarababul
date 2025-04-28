@@ -29,6 +29,8 @@ import com.example.mobilproje.viewmodel.CarViewModel;
 import com.example.mobilproje.data.model.Car;
 import com.example.mobilproje.data.model.Brand;
 import com.example.mobilproje.viewmodel.UserViewModel;
+import com.example.mobilproje.util.Constants;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +136,17 @@ public class CarListFragment extends Fragment {
         brandViewModel = new ViewModelProvider(this).get(BrandViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
+        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Constants.COLOR_OPTIONS);
+        colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerColorFilter.setAdapter(colorAdapter);
+
+        ArrayAdapter<String> transmissionAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Constants.TRANSMISSION_OPTIONS);
+        transmissionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerTransmissionFilter.setAdapter(transmissionAdapter);
+
+        ArrayAdapter<String> fuelAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Constants.FUEL_OPTIONS);
+        fuelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerFuelFilter.setAdapter(fuelAdapter);
 
 
 
@@ -172,7 +185,7 @@ public class CarListFragment extends Fragment {
                             CarListAdapter adapter = new CarListAdapter(cars , userViewModel);
                             binding.recyclerViewCars.setAdapter(adapter);  // Filtrelenmiş araçları RecyclerView'a bağla
                         } else {
-                            Toast.makeText(getContext(), "No cars found with the selected filters", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Filtreleme işlemine uygun araç bulunamadı", Toast.LENGTH_SHORT).show();
                         }
                     });
 

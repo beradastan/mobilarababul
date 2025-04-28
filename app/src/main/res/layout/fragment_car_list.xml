@@ -130,6 +130,25 @@
                 android:inputType="number" />
         </LinearLayout>
 
+        <Spinner
+            android:id="@+id/spinnerColorFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTransmissionFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerFuelFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
+
+
         <!-- Filtre uygulama butonu -->
         <Button
             android:id="@+id/btnApplyFilters"

@@ -9,14 +9,12 @@ import androidx.room.TypeConverters;
 
 import com.example.mobilproje.data.dao.BrandDao;
 import com.example.mobilproje.data.dao.CarDao;
-import com.example.mobilproje.data.dao.CarImageDao;
 import com.example.mobilproje.data.dao.UserDao;
 import com.example.mobilproje.data.model.Brand;
 import com.example.mobilproje.data.model.Car;
-import com.example.mobilproje.data.model.CarImage;
 import com.example.mobilproje.data.model.User;
 
-@Database(entities = {Car.class, Brand.class, User.class , CarImage.class}, version = 7)
+@Database(entities = {Car.class, Brand.class, User.class }, version = 11)
 @TypeConverters({Converters.class})
 
 public abstract class AppDatabase extends RoomDatabase {
@@ -24,7 +22,6 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
     public abstract UserDao userDao();
 
-    public abstract CarImageDao carImageDao();
 
     public abstract CarDao carDao();
     public abstract BrandDao brandDao();

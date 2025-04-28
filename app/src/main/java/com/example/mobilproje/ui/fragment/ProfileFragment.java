@@ -18,6 +18,8 @@ import com.example.mobilproje.R;
 import com.example.mobilproje.data.database.AppDatabase;
 import com.example.mobilproje.data.model.User;
 import com.example.mobilproje.databinding.FragmentProfileBinding;
+import com.example.mobilproje.ui.adapter.CarAdapter;
+import com.example.mobilproje.ui.adapter.FavoriteCarAdapter;
 import com.example.mobilproje.ui.adapter.MyCarAdapter;
 import com.example.mobilproje.viewmodel.CarViewModel;
 import com.example.mobilproje.viewmodel.UserViewModel;
@@ -50,6 +52,7 @@ public class ProfileFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
 
         loadUserData();
+        listFavoriteCars();
 
         binding.btnSaveProfile.setOnClickListener(v -> saveUserData());
         binding.btnLogout.setOnClickListener(v -> logout());
@@ -121,6 +124,34 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+
+    private void listFavoriteCars() {
+        String username = requireContext().getSharedPreferences("user", Context.MODE_PRIVATE)
+                .getString("username", "");
+
+        userViewModel.getUserByUsernameLive(username).observe(getViewLifecycleOwner(), user -> {
+            if (user != null && user.getFavoriteCarIds() != null && !user.getFavoriteCarIds().isEmpty()) {
+                carViewModel.getCarsByIds(user.getFavoriteCarIds()).observe(getViewLifecycleOwner(), favoriteCars -> {
+                    if (favoriteCars != null && !favoriteCars.isEmpty()) {
+                        FavoriteCarAdapter favoriteCarAdapter = new FavoriteCarAdapter(favoriteCars, car -> {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("carId", car.getId());
+                            NavHostFragment.findNavController(this)
+                                    .navigate(R.id.action_profileFragment_to_carDetailFragment, bundle);
+                        });
+
+                        binding.rvFavoriteCars.setLayoutManager(new LinearLayoutManager(getContext()));
+                        binding.rvFavoriteCars.setAdapter(favoriteCarAdapter);
+                    } else {
+                        Toast.makeText(requireContext(), "Henüz favori eklediğiniz bir ilan yok.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+
 
 
 

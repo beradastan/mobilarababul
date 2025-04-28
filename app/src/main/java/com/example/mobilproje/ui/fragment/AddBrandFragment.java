@@ -35,14 +35,13 @@ public class AddBrandFragment extends Fragment {
 
         binding.btnSaveBrand.setOnClickListener(v -> {
             String name = binding.etBrandName.getText().toString().trim();
-            String logoUrl = binding.etLogoUrl.getText().toString().trim();
 
             if (name.isEmpty()) {
                 Toast.makeText(getContext(), "Marka adı zorunludur", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            Brand brand = new Brand(name, logoUrl);
+            Brand brand = new Brand(name);
             brandViewModel.insert(brand);
 
             Toast.makeText(getContext(), "Marka eklendi", Toast.LENGTH_SHORT).show();
