@@ -12,4 +12,9 @@ public class Constants {
     public static final String[] FUEL_OPTIONS = {
             "Benzin", "Dizel", "Hibrit", "Elektrik"
     };
+
+    public static final String[] CITY_OPTIONS = {
+            "İstanbul", "Ankara", "İzmir", "Bursa", "Adana",
+            "Antalya", "Konya", "Gaziantep", "Şanlıurfa", "Mersin"
+    };
 }

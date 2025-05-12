@@ -67,6 +67,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"/>
 
+        <Spinner
+            android:id="@+id/etSpinnerCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"/>
+
+
 
         <EditText
             android:id="@+id/etPrice"
@@ -86,6 +93,7 @@
             android:text="Kaydet"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimary"/>
     </LinearLayout>
 </ScrollView>

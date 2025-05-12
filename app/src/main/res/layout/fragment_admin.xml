@@ -1,56 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <!-- Üst Butonlar (Filtrele, Sırala, Marka Ekle) -->
+    <!-- ÜST BAR -->
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="end|bottom">
+        android:background="@color/colorPrimaryVariant"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tvPageTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Yönetim Ekranı"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topButtonsLayoutAdmin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/topBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <Button
             android:id="@+id/btnFilterAdmin"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Filtrele"
-            android:layout_marginEnd="16dp"/>
+            android:drawableEnd="@drawable/baseline_filter_list_alt_24"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:tint="@android:color/black"
+            android:backgroundTint="@color/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"/>
 
         <Button
             android:id="@+id/btnSortAdmin"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Sırala"
-            android:layout_marginEnd="16dp" />
+            android:drawableEnd="@drawable/round_import_export_24"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:tint="@android:color/black"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/colorPrimary"
+            app:layout_constraintStart_toEndOf="@id/btnFilterAdmin"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <Button
-            android:id="@+id/btnGoToAddBrand"
-            android:text="Marka Ekle"
+            android:id="@+id/btnGoToAdd"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:text="Marka Ekle"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:tint="@android:color/black"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Filtre Alanı -->
+
+
+
+
+    <!-- Filtre Alanı (Başta Gizli) -->
     <LinearLayout
         android:id="@+id/filterLayoutAdmin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:background="#EEEEEE"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/topButtonsLayoutAdmin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Marka Spinner -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Marka Seçiniz"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"/>
+        <Spinner
+            android:id="@+id/spinnerBrandsAdmin" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Şehir Seçiniz"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"/>
 
         <Spinner
-            android:id="@+id/spinnerBrandsAdmin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:id="@+id/spinnerCityAdmin" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp"/>
 
+
+        <!-- Renk Spinner -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Renk Seçiniz"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"/>
+        <Spinner
+            android:id="@+id/spinnerColorFilterAdmin" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp"/>
+
+        <!-- Vites Spinner -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vites Türü Seçiniz"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"/>
+        <Spinner
+            android:id="@+id/spinnerTransmissionFilterAdmin" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp"/>
+
+        <!-- Yakıt Spinner -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yakit Türü Seçiniz"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"/>
+        <Spinner
+            android:id="@+id/spinnerFuelFilterAdmin" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp"/>
+
+        <!-- Yıl Aralığı -->
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
 
             <EditText
                 android:id="@+id/etMinYearAdmin"
@@ -58,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Min Yıl"
-                android:inputType="number" />
+                android:inputType="number"/>
 
             <EditText
                 android:id="@+id/etMaxYearAdmin"
@@ -66,13 +180,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Max Yıl"
-                android:inputType="number" />
+                android:inputType="number"
+                android:layout_marginStart="8dp"/>
         </LinearLayout>
 
+        <!-- Fiyat Aralığı -->
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
 
             <EditText
                 android:id="@+id/etMinPriceAdmin"
@@ -80,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Min Fiyat"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"/>
 
             <EditText
                 android:id="@+id/etMaxPriceAdmin"
@@ -88,13 +205,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Max Fiyat"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:layout_marginStart="8dp"/>
         </LinearLayout>
 
+        <!-- KM Aralığı -->
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
 
             <EditText
                 android:id="@+id/etMinKmAdmin"
@@ -102,7 +222,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Min KM"
-                android:inputType="number" />
+                android:inputType="number"/>
 
             <EditText
                 android:id="@+id/etMaxKmAdmin"
@@ -110,19 +230,65 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Max KM"
-                android:inputType="number" />
+                android:inputType="number"
+                android:layout_marginStart="8dp"/>
         </LinearLayout>
 
+        <!-- Filtre Uygula Butonu -->
         <Button
             android:id="@+id/btnApplyFiltersAdmin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Filtre Uygula" />
+            android:text="Filtre Uygula"
+            android:backgroundTint="#C53D3D"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
-    <!-- RecyclerView: Araçlar -->
+    <!-- MARKA EKLE FORMU -->
+    <LinearLayout
+        android:id="@+id/addFormLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:visibility="gone"
+        android:background="#F1F1F1"
+        app:layout_constraintTop_toBottomOf="@id/filterLayoutAdmin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/etBrandName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Marka Adı"
+            android:inputType="text"/>
+
+
+        <Button
+            android:id="@+id/btnSaveBrand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Markayı Kaydet"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/colorSecondaryVariant"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+
+
+
+    <!-- Admin RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAdminCars"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/addFormLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,7 +22,7 @@
 
     <!-- Açıklama (Description) -->
     <TextView
-        android:id="@+id/tvDescription"
+        android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Açıklama"
@@ -44,7 +44,7 @@
         android:text="Marka - Model"
         android:textSize="14sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/tvDescription"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toEndOf="@id/imgCar"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"

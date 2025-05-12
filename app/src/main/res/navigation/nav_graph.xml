@@ -59,10 +59,7 @@
         app:destination="@id/carDetailFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/addBrandFragment"
-        android:name="com.example.mobilproje.ui.fragment.AddBrandFragment"
-        android:label="AddBrandFragment" />
+
 
 
 
@@ -71,9 +68,7 @@
         android:name="com.example.mobilproje.ui.fragment.AdminFragment"
         android:label="AdminFragment">
 
-        <action
-            android:id="@+id/action_adminFragment_to_addBrandFragment"
-            app:destination="@id/addBrandFragment" />
+
 
         <action
             android:id="@+id/action_adminFragment_to_carListFragment"

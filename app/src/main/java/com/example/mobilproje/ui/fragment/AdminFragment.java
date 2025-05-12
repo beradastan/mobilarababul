@@ -1,7 +1,8 @@
 package com.example.mobilproje.ui.fragment;
 
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,15 +27,17 @@ import com.example.mobilproje.R;
 import com.example.mobilproje.data.database.AppDatabase;
 import com.example.mobilproje.data.model.Brand;
 import com.example.mobilproje.data.model.Car;
-import com.example.mobilproje.data.model.User;
 import com.example.mobilproje.databinding.FragmentAdminBinding;
 import com.example.mobilproje.databinding.ItemCarAdminBinding;
+import com.example.mobilproje.util.Constants;
 import com.example.mobilproje.viewmodel.BrandViewModel;
 import com.example.mobilproje.viewmodel.CarViewModel;
 import com.example.mobilproje.viewmodel.UserViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class AdminFragment extends Fragment {
     private FragmentAdminBinding binding;
@@ -42,27 +45,26 @@ public class AdminFragment extends Fragment {
     private BrandViewModel brandViewModel;
     private UserViewModel userViewModel;
     private AppDatabase db;
-    private List<Car> carList = new ArrayList<>();
 
+    // Fragment layout'unu şişiriyoruz (ViewBinding)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAdminBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
+    // EditText içerisindeki değeri Integer olarak parse eden yardımcı metot
     private Integer parseInteger(EditText editText) {
         String text = editText.getText().toString().trim();
-        if (text.isEmpty()) {
+        if (text.isEmpty()) return null;
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
             return null;
-        } else {
-            try {
-                return Integer.parseInt(text);
-            } catch (NumberFormatException e) {
-                return null;
-            }
         }
     }
 
+    // Gelen araç listesine göre RecyclerView güncellenir
     private void updateRecyclerView(List<Car> cars) {
         if (cars != null && !cars.isEmpty()) {
             AdminCarListAdapter adapter = new AdminCarListAdapter(userViewModel, cars);
@@ -72,24 +74,60 @@ public class AdminFragment extends Fragment {
         }
     }
 
+    // Tüm kontroller ve gözlemlemeler burada yapılır
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Room DB oluşturuluyor (mainThread'de erişime açık)
         db = Room.databaseBuilder(requireContext(), AppDatabase.class, "car_database")
                 .allowMainThreadQueries()
                 .build();
 
+        // ViewModel tanımlamaları
         brandViewModel = new ViewModelProvider(this).get(BrandViewModel.class);
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
+        // RecyclerView dikey liste şeklinde çalışır
         binding.recyclerViewAdminCars.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        // Renk Spinner'ı
+        List<String> colorOptionsAdmin = new ArrayList<>();
+        colorOptionsAdmin.add("Hepsi");
+        colorOptionsAdmin.addAll(Arrays.asList(Constants.COLOR_OPTIONS));
+        ArrayAdapter<String> colorAdapterAdmin = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, colorOptionsAdmin);
+        colorAdapterAdmin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerColorFilterAdmin.setAdapter(colorAdapterAdmin);
+
+        // Vites Spinner
+        List<String> transmissionOptionsAdmin = new ArrayList<>();
+        transmissionOptionsAdmin.add("Hepsi");
+        transmissionOptionsAdmin.addAll(Arrays.asList(Constants.TRANSMISSION_OPTIONS));
+        ArrayAdapter<String> transmissionAdapterAdmin = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, transmissionOptionsAdmin);
+        transmissionAdapterAdmin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerTransmissionFilterAdmin.setAdapter(transmissionAdapterAdmin);
+
+        // Yakıt Spinner
+        List<String> fuelOptionsAdmin = new ArrayList<>();
+        fuelOptionsAdmin.add("Hepsi");
+        fuelOptionsAdmin.addAll(Arrays.asList(Constants.FUEL_OPTIONS));
+        ArrayAdapter<String> fuelAdapterAdmin = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, fuelOptionsAdmin);
+        fuelAdapterAdmin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerFuelFilterAdmin.setAdapter(fuelAdapterAdmin);
+
+        // Şehir Spinner
+        List<String> cityOptions = new ArrayList<>();
+        cityOptions.add("Hepsi");
+        cityOptions.addAll(Arrays.asList(Constants.CITY_OPTIONS));
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, cityOptions);
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerCityAdmin.setAdapter(cityAdapter);
+
+        // Sıralama butonuna basıldığında popup menü gösterilir
         binding.btnSortAdmin.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(getContext(), binding.btnSortAdmin);
             Menu menu = popupMenu.getMenu();
-
             menu.add(Menu.NONE, 0, 0, "Fiyata Göre Azalan");
             menu.add(Menu.NONE, 1, 1, "Fiyata Göre Artan");
             menu.add(Menu.NONE, 2, 2, "Kilometreye Göre Azalan");
@@ -99,44 +137,29 @@ public class AdminFragment extends Fragment {
 
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
-                    case 0:
-                        carViewModel.getSortedCarsByPrice(false).observe(getViewLifecycleOwner(), this::updateRecyclerView);
-                        return true;
-                    case 1:
-                        carViewModel.getSortedCarsByPrice(true).observe(getViewLifecycleOwner(), this::updateRecyclerView);
-                        return true;
-                    case 2:
-                        carViewModel.getSortedCarsByKm(false).observe(getViewLifecycleOwner(), this::updateRecyclerView);
-                        return true;
-                    case 3:
-                        carViewModel.getSortedCarsByKm(true).observe(getViewLifecycleOwner(), this::updateRecyclerView);
-                        return true;
-                    case 4:
-                        carViewModel.getSortedCarsByYear(false).observe(getViewLifecycleOwner(), this::updateRecyclerView);
-                        return true;
-                    case 5:
-                        carViewModel.getSortedCarsByYear(true).observe(getViewLifecycleOwner(), this::updateRecyclerView);
-                        return true;
-                    default:
-                        return false;
+                    case 0: carViewModel.getSortedCarsByPrice(false).observe(getViewLifecycleOwner(), this::updateRecyclerView); return true;
+                    case 1: carViewModel.getSortedCarsByPrice(true).observe(getViewLifecycleOwner(), this::updateRecyclerView); return true;
+                    case 2: carViewModel.getSortedCarsByKm(false).observe(getViewLifecycleOwner(), this::updateRecyclerView); return true;
+                    case 3: carViewModel.getSortedCarsByKm(true).observe(getViewLifecycleOwner(), this::updateRecyclerView); return true;
+                    case 4: carViewModel.getSortedCarsByYear(false).observe(getViewLifecycleOwner(), this::updateRecyclerView); return true;
+                    case 5: carViewModel.getSortedCarsByYear(true).observe(getViewLifecycleOwner(), this::updateRecyclerView); return true;
+                    default: return false;
                 }
             });
-
             popupMenu.show();
         });
 
+        // Filtre paneli aç/kapa
         binding.btnFilterAdmin.setOnClickListener(v -> {
-            if (binding.filterLayoutAdmin.getVisibility() == View.GONE) {
-                binding.filterLayoutAdmin.setVisibility(View.VISIBLE);
-            } else {
-                binding.filterLayoutAdmin.setVisibility(View.GONE);
-            }
+            binding.filterLayoutAdmin.setVisibility(
+                    binding.filterLayoutAdmin.getVisibility() == View.GONE ? View.VISIBLE : View.GONE
+            );
         });
 
+        // Filtreleri uygula
         binding.btnApplyFiltersAdmin.setOnClickListener(v -> {
             Brand selectedBrand = (Brand) binding.spinnerBrandsAdmin.getSelectedItem();
             int selectedBrandId = (selectedBrand != null && !"Hepsi".equals(selectedBrand.getName())) ? selectedBrand.getId() : -1;
-
             Integer minYear = parseInteger(binding.etMinYearAdmin);
             Integer maxYear = parseInteger(binding.etMaxYearAdmin);
             Integer minPrice = parseInteger(binding.etMinPriceAdmin);
@@ -144,21 +167,44 @@ public class AdminFragment extends Fragment {
             Integer minKm = parseInteger(binding.etMinKmAdmin);
             Integer maxKm = parseInteger(binding.etMaxKmAdmin);
 
-            carViewModel.getFilteredCars(selectedBrandId, minYear, maxYear, minPrice, maxPrice, minKm, maxKm)
+            String selectedColor = binding.spinnerColorFilterAdmin.getSelectedItem().toString();
+            String selectedTransmission = binding.spinnerTransmissionFilterAdmin.getSelectedItem().toString();
+            String selectedFuel = binding.spinnerFuelFilterAdmin.getSelectedItem().toString();
+            String selectedCity = binding.spinnerCityAdmin.getSelectedItem().toString();
+
+            // Filtrelenmiş araçlar listelenir
+            carViewModel.getFilteredCars(selectedBrandId, minYear, maxYear, minPrice, maxPrice, minKm, maxKm,
+                            selectedColor, selectedTransmission, selectedFuel , selectedCity)
                     .observe(getViewLifecycleOwner(), this::updateRecyclerView);
 
             binding.filterLayoutAdmin.setVisibility(View.GONE);
         });
 
-        binding.btnGoToAddBrand.setOnClickListener(v -> {
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_adminFragment_to_addBrandFragment);
+        // Marka ekleme formu görünürlüğünü değiştir
+        binding.btnGoToAdd.setOnClickListener(v -> {
+            binding.addFormLayout.setVisibility(
+                    binding.addFormLayout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE
+            );
         });
 
+        // Marka kaydet
+        binding.btnSaveBrand.setOnClickListener(v -> {
+            String name = binding.etBrandName.getText().toString().trim();
+            if (name.isEmpty()) {
+                Toast.makeText(getContext(), "Marka adı zorunludur", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Brand brand = new Brand(name);
+            brandViewModel.insert(brand);
+            binding.etBrandName.setText("");
+            Toast.makeText(getContext(), "Marka eklendi", Toast.LENGTH_SHORT).show();
+        });
+
+        // Spinner'a markaları yükle
         brandViewModel.getAllBrands().observe(getViewLifecycleOwner(), brands -> {
             if (brands != null && !brands.isEmpty()) {
                 List<Brand> allBrands = new ArrayList<>();
-                allBrands.add(new Brand("Hepsi"));
+                allBrands.add(new Brand("Hepsi")); // Hepsi filtresi
                 allBrands.addAll(brands);
 
                 ArrayAdapter<Brand> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, allBrands);
@@ -167,17 +213,11 @@ public class AdminFragment extends Fragment {
             }
         });
 
-        carViewModel.getAllCars().observe(getViewLifecycleOwner(), cars -> {
-            if (cars != null && !cars.isEmpty()) {
-                carList = new ArrayList<>(cars);
-                AdminCarListAdapter adapter = new AdminCarListAdapter(userViewModel, carList);
-                binding.recyclerViewAdminCars.setAdapter(adapter);
-            } else {
-                Toast.makeText(getContext(), "İlan bulunamadı", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Tüm araçları getir
+        carViewModel.getAllCars().observe(getViewLifecycleOwner(), this::updateRecyclerView);
     }
 
+    // RecyclerView içinde araçları gösteren özel adapter
     private class AdminCarListAdapter extends RecyclerView.Adapter<AdminCarListAdapter.AdminCarViewHolder> {
         private final List<Car> carList;
         private final UserViewModel userViewModel;
@@ -191,8 +231,8 @@ public class AdminFragment extends Fragment {
         @Override
         public AdminCarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            ItemCarAdminBinding itemBinding = ItemCarAdminBinding.inflate(inflater, parent, false);
-            return new AdminCarViewHolder(itemBinding);
+            ItemCarAdminBinding binding = ItemCarAdminBinding.inflate(inflater, parent, false);
+            return new AdminCarViewHolder(binding);
         }
 
         @Override
@@ -206,58 +246,47 @@ public class AdminFragment extends Fragment {
         }
 
         class AdminCarViewHolder extends RecyclerView.ViewHolder {
-            private final ItemCarAdminBinding itemBinding;
+            private final ItemCarAdminBinding binding;
 
             AdminCarViewHolder(ItemCarAdminBinding binding) {
                 super(binding.getRoot());
-                this.itemBinding = binding;
+                this.binding = binding;
             }
 
+            // Her araca ait bilgileri view'a bağlar
             void bind(Car car) {
+                binding.tvPrice.setText(car.price + " ₺");
+                binding.tvTitle.setText(car.title);
+                binding.tvUserId.setText("Kullanıcı ID: " + car.userId);
+                binding.tvCity.setText(car.city);
 
-                itemBinding.tvPrice.setText(car.price + " ₺");
-                itemBinding.tvDescription.setText(car.description);
-                itemBinding.tvUserId.setText("Kullanıcı ID: " + car.userId);
-
+                // Marka adı
                 carViewModel.getBrandById(car.brandId).observe(getViewLifecycleOwner(), brand -> {
                     if (brand != null) {
-                        itemBinding.tvBrandModel.setText(brand.name + " , " + car.model);  // Set the brand name
+                        binding.tvBrandModel.setText(brand.name + " - " + car.model);
                     }
                 });
 
-                userViewModel.getUserById(car.userId).observe(getViewLifecycleOwner(), user -> {
+                // Kullanıcı adı
+                userViewModel.getUserById(car.userId).observeForever(user -> {
                     if (user != null) {
-                        itemBinding.tvUsername.setText("Kullanıcı: " + user.username);
-                        itemBinding.tvUserId.setText("Kullanıcı ID: " + user.id);
-                    }
-                });
-
-                userViewModel.getCityByUserIdLive(car.getUserId()).observe(getViewLifecycleOwner(), city -> {
-                    if (city != null) {
-                        itemBinding.tvCity.setText(city);
+                        String userInfo = "Kullanıcı Adı : " + user.getUsername();
+                        binding.tvUsername.setText(userInfo);
                     } else {
-                        itemBinding.tvCity.setText("Bilinmiyor");
+                        binding.tvUserId.setText("Kullanıcı bilgisi yok");
                     }
                 });
 
+                // İlk görsel gösterilir (Base64 → byte[] → Glide)
                 if (car.imageBase64List != null && !car.imageBase64List.isEmpty()) {
                     byte[] decodedBytes = Base64.decode(car.imageBase64List.get(0), Base64.DEFAULT);
-                    Glide.with(requireContext())
+                    Glide.with(binding.getRoot().getContext())
                             .asBitmap()
                             .load(decodedBytes)
-                            .into(itemBinding.imgCar);
+                            .into(binding.imgCar);
                 }
-
-
-
-                itemBinding.btnDelete.setOnClickListener(v -> {
-                    db.carDao().deleteCarById(car.id);
-                    int position = getAdapterPosition();
-                    carList.remove(position);
-                    notifyItemRemoved(position);
-                    Toast.makeText(requireContext(), "Araç silindi", Toast.LENGTH_SHORT).show();
-                });
             }
         }
     }
 }
+

@@ -35,7 +35,9 @@ android {
         viewBinding = true
     }
 
-
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
 
 }
 

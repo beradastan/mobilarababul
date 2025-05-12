@@ -40,19 +40,14 @@
             android:inputType="textEmailAddress"
             android:layout_marginTop="8dp" />
 
-        <EditText
-            android:id="@+id/etCity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Şehir"
-            android:layout_marginTop="8dp" />
 
         <Button
             android:id="@+id/btnSaveProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kaydet"
-            android:layout_marginTop="16dp" />
+            android:text="Kaydet / Güncelle"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@android:color/holo_green_dark"/>
 
         <Button
             android:id="@+id/btnLogout"
@@ -60,7 +55,7 @@
             android:layout_height="wrap_content"
             android:text="Çıkış Yap"
             android:layout_marginTop="8dp"
-            android:backgroundTint="#F44336"
+            android:backgroundTint="@android:color/holo_red_dark"
             android:textColor="@android:color/white" />
 
         <!-- İlanlarım Başlığı -->
@@ -72,7 +67,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginTop="24dp"
-            android:gravity="center_horizontal" />
+             />
 
         <!-- İlanlarım RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
@@ -81,14 +76,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Favori İlanlarım"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginTop="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"/>
+            android:gravity="center_horizontal"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFavoriteCars"

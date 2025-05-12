@@ -21,7 +21,6 @@ public class User {
     public String lastName;
     public String phone;
     public String email;
-    public String city;
 
     public List<Integer> getFavoriteCarIds() {
         return favoriteCarIds;
@@ -47,7 +46,6 @@ public class User {
     public String getLastName() { return lastName; }
     public String getPhone() { return phone; }
     public String getEmail() { return email; }
-    public String getCity() { return city; }
 
     public void setId(int id) { this.id = id; }
     public void setUsername(String username) { this.username = username; }
@@ -56,6 +54,4 @@ public class User {
     public void setLastName(String lastName) { this.lastName = lastName; }
     public void setPhone(String phone) { this.phone = phone; }
     public void setEmail(String email) { this.email = email; }
-    public void setCity(String city) { this.city = city; }
-
 }
