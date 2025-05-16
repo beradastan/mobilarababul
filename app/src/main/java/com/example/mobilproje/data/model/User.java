@@ -38,7 +38,6 @@ public class User {
         this.password = password;
     }
 
-    // Getter - Setter'lar
     public int getId() { return id; }
     public String getUsername() { return username; }
     public String getPassword() { return password; }

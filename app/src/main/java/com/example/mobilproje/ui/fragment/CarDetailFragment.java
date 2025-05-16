@@ -28,53 +28,44 @@ import java.util.List;
 
 public class CarDetailFragment extends Fragment {
 
-    private FragmentCarDetailBinding binding; // ViewBinding
-    private CarViewModel carViewModel;        // Araç verisi için ViewModel
-    private int carId;                        // Detayı gösterilecek aracın ID'si
+    private FragmentCarDetailBinding binding;
+    private CarViewModel carViewModel;
+    private int carId;
 
-    // Layout şişirme işlemi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCarDetailBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
-    // View oluşturulduktan sonra çalışır
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Gönderilen argümandan carId alınır
         if (getArguments() != null) {
             carId = getArguments().getInt("carId", -1);
         }
 
-        // ViewModel tanımlanır
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
 
-        // carId geçerliyse veritabanından o araç çağrılır
         if (carId != -1) {
             carViewModel.getCarById(carId).observe(getViewLifecycleOwner(), car -> {
                 if (car != null) {
-                    bindCarData(car); // Veriler ekrana basılır
+                    bindCarData(car);
                 }
             });
         }
     }
 
-    // Verileri UI'ya bağlayan metot
     private void bindCarData(Car car) {
-        // Açıklama direkt gösterilir
         binding.tvDescription.setText(car.getDescription());
 
-        // Marka adı getirilir
         carViewModel.getBrandById(car.brandId).observe(getViewLifecycleOwner(), brand -> {
             if (brand != null) {
                 binding.tvBrand.setText(brand.name);
             }
         });
 
-        // Diğer bilgiler set edilir
         binding.tvModel.setText(String.valueOf(car.getModel()));
         binding.tvYear.setText(String.valueOf(car.getYear()));
         binding.tvKm.setText(String.valueOf(car.getKm()));
@@ -85,7 +76,6 @@ public class CarDetailFragment extends Fragment {
         binding.tvFuel.setText(car.getFuelType());
         binding.tvOwnerCity.setText(car.getCity());
 
-        // Fotoğraflar decode edilip bitmap'e çevrilir
         List<Bitmap> bitmapList = new ArrayList<>();
         if (car.getImageBase64List() != null) {
             for (String base64Image : car.getImageBase64List()) {
@@ -99,33 +89,28 @@ public class CarDetailFragment extends Fragment {
             }
         }
 
-        // Görseller varsa ViewPager2'ye bağlanır
         if (!bitmapList.isEmpty()) {
             CarImagePagerAdapter adapter = new CarImagePagerAdapter(bitmapList);
             binding.viewPagerCarImages.setAdapter(adapter);
         }
 
-        // Favori kontrolü için kullanıcı adı alınır
         String username = requireContext().getSharedPreferences("user", Context.MODE_PRIVATE).getString("username", "");
         UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // Kullanıcının favori listesi getirilir
         userViewModel.getUserByUsernameLive(username).observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 List<Integer> favorites = user.getFavoriteCarIds();
                 if (favorites == null) {
                     favorites = new ArrayList<>();
                     user.setFavoriteCarIds(favorites);
-                    userViewModel.update(user); // Favori listesi null ise oluşturulur
+                    userViewModel.update(user);
                 }
 
                 final List<Integer> finalFavorites = favorites;
 
-                // Favori ikonu duruma göre gösterilir
                 boolean isFavorite = finalFavorites.contains(car.getId());
                 binding.imgFavoriteStar.setImageResource(isFavorite ? R.drawable.ic_star_filled : R.drawable.ic_star_border);
 
-                // Favoriye ekle/çıkar işlemi
                 binding.imgFavoriteStar.setOnClickListener(v -> {
                     if (finalFavorites.contains(car.getId())) {
                         finalFavorites.remove(Integer.valueOf(car.getId()));
@@ -143,7 +128,6 @@ public class CarDetailFragment extends Fragment {
             }
         });
 
-        // Aracı ekleyen kullanıcının bilgileri getirilir
         userViewModel.getUserById(car.getUserId()).observe(getViewLifecycleOwner(), owner -> {
             if (owner.getFirstName() == null && owner.getLastName() == null) {
                 binding.tvOwnerName.setText("Bilinmiyor");

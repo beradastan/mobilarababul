@@ -41,19 +41,17 @@ import java.util.concurrent.Executors;
 
 public class CarListFragment extends Fragment {
 
-    private FragmentCarListBinding binding;      // ViewBinding sınıfı
-    private BrandViewModel brandViewModel;       // Marka verisi için ViewModel
-    private CarViewModel carViewModel;           // Araç verisi için ViewModel
-    private UserViewModel userViewModel;         // Kullanıcı bilgileri için ViewModel
+    private FragmentCarListBinding binding;
+    private BrandViewModel brandViewModel;
+    private CarViewModel carViewModel;
+    private UserViewModel userViewModel;
 
-    // Layout bağlanıyor
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCarListBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
-    // Sayı içeren EditText'leri güvenli şekilde integer'a dönüştürür
     private Integer parseInteger(EditText editText) {
         String text = editText.getText().toString().trim();
         if (text.isEmpty()) return null;
@@ -64,7 +62,6 @@ public class CarListFragment extends Fragment {
         }
     }
 
-    // Araç listesini RecyclerView'a bağlayan fonksiyon
     private void updateRecyclerView(List<Car> cars) {
         if (cars != null && !cars.isEmpty()) {
             CarListAdapter adapter = new CarListAdapter(cars , userViewModel);
@@ -74,12 +71,10 @@ public class CarListFragment extends Fragment {
         }
     }
 
-    // Fragment yüklendiğinde yapılacak işlemler
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Sıralama butonu tıklanınca popup menü gösterilir
         binding.btnSort.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(getContext(), binding.btnSort);
             Menu menu = popupMenu.getMenu();
@@ -118,31 +113,26 @@ public class CarListFragment extends Fragment {
             popupMenu.show();
         });
 
-        // ViewModel tanımlamaları
         brandViewModel = new ViewModelProvider(this).get(BrandViewModel.class);
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // Filtre spinner'larının veri kaynakları
         setupSpinner(binding.spinnerColorFilter, Constants.COLOR_OPTIONS);
         setupSpinner(binding.spinnerTransmissionFilter, Constants.TRANSMISSION_OPTIONS);
         setupSpinner(binding.spinnerFuelFilter, Constants.FUEL_OPTIONS);
         setupSpinner(binding.spinnerCityFilter, Constants.CITY_OPTIONS);
 
-        // Filtre panelini aç/kapa
         binding.btnFilter.setOnClickListener(v -> {
             binding.filterLayout.setVisibility(
                     binding.filterLayout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE
             );
         });
 
-        // Araç ekle butonu
         binding.fabAddCar.setOnClickListener(v -> {
             NavHostFragment.findNavController(this)
                     .navigate(R.id.action_carListFragment_to_addCarFragment);
         });
 
-        // Filtreyi uygula
         binding.btnApplyFilters.setOnClickListener(v -> {
             Brand selectedBrand = (Brand) binding.spinnerBrands.getSelectedItem();
             int selectedBrandId = (selectedBrand != null && !selectedBrand.getName().equals("Hepsi")) ? selectedBrand.getId() : -1;
@@ -167,12 +157,10 @@ public class CarListFragment extends Fragment {
             binding.filterLayout.setVisibility(View.GONE);
         });
 
-        // Profil sayfasına git
         binding.btnProfile.setOnClickListener(v -> {
             NavHostFragment.findNavController(this).navigate(R.id.action_carListFragment_to_profileFragment);
         });
 
-        // Marka spinner'ını güncelle
         brandViewModel.getAllBrands().observe(getViewLifecycleOwner(), brands -> {
             if (brands != null && !brands.isEmpty()) {
                 List<Brand> allBrands = new ArrayList<>();
@@ -185,12 +173,10 @@ public class CarListFragment extends Fragment {
             }
         });
 
-        // RecyclerView ayarları ve veri gözlemi
         binding.recyclerViewCars.setLayoutManager(new LinearLayoutManager(getContext()));
         carViewModel.getAllCars().observe(getViewLifecycleOwner(), this::updateRecyclerView);
     }
 
-    // Spinner kurulumunu yapan yardımcı metot
     private void setupSpinner(android.widget.Spinner spinner, String[] options) {
         List<String> allOptions = new ArrayList<>();
         allOptions.add("Hepsi");
@@ -200,7 +186,6 @@ public class CarListFragment extends Fragment {
         spinner.setAdapter(adapter);
     }
 
-    // RecyclerView adapter sınıfı
     private class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.CarViewHolder> {
         private final List<Car> carList;
         private final UserViewModel userViewModel;
@@ -228,7 +213,6 @@ public class CarListFragment extends Fragment {
             return carList.size();
         }
 
-        // ViewHolder sınıfı
         class CarViewHolder extends RecyclerView.ViewHolder {
             private final ItemCarBinding itemBinding;
 
@@ -242,14 +226,12 @@ public class CarListFragment extends Fragment {
                 itemBinding.tvCity.setText(car.city);
                 itemBinding.tvPrice.setText(car.price + " ₺");
 
-                // Marka adı getiriliyor
                 carViewModel.getBrandById(car.brandId).observe(getViewLifecycleOwner(), brand -> {
                     if (brand != null) {
                         itemBinding.tvBrandModel.setText(brand.name + " - " + car.model);
                     }
                 });
 
-                // Görseli Glide ile yükle
                 if (car.imageBase64List != null && !car.imageBase64List.isEmpty()) {
                     byte[] decodedBytes = Base64.decode(car.imageBase64List.get(0), Base64.DEFAULT);
                     Glide.with(requireContext())
@@ -258,7 +240,6 @@ public class CarListFragment extends Fragment {
                             .into(itemBinding.imgCar);
                 }
 
-                // Kart tıklanınca detay sayfasına git
                 itemBinding.getRoot().setOnClickListener(v -> {
                     Bundle bundle = new Bundle();
                     bundle.putInt("carId", car.getId());

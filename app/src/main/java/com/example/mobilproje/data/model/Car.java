@@ -21,7 +21,7 @@ import java.util.List;
         ),
         indices = {@Index("brandId")}
 )
-@TypeConverters(Converters.class) // en üstte ekle
+@TypeConverters(Converters.class)
 
 public class Car implements Serializable {
     @PrimaryKey(autoGenerate = true)
@@ -111,7 +111,6 @@ public class Car implements Serializable {
     }
 
 
-    // Getter methods
     public int getId() {
         return id;
     }
@@ -146,7 +145,6 @@ public class Car implements Serializable {
         return userId;
     }
 
-    // You may also want setters if you are modifying these values
     public void setId(int id) {
         this.id = id;
     }

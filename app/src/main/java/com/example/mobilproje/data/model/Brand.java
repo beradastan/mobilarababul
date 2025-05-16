@@ -1,9 +1,6 @@
-// Brand.java
 package com.example.mobilproje.data.model;
 
-import androidx.annotation.Nullable;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "brands")

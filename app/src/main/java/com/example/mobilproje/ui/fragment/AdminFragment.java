@@ -1,5 +1,6 @@
 package com.example.mobilproje.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,14 +47,12 @@ public class AdminFragment extends Fragment {
     private UserViewModel userViewModel;
     private AppDatabase db;
 
-    // Fragment layout'unu şişiriyoruz (ViewBinding)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAdminBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
-    // EditText içerisindeki değeri Integer olarak parse eden yardımcı metot
     private Integer parseInteger(EditText editText) {
         String text = editText.getText().toString().trim();
         if (text.isEmpty()) return null;
@@ -64,7 +63,6 @@ public class AdminFragment extends Fragment {
         }
     }
 
-    // Gelen araç listesine göre RecyclerView güncellenir
     private void updateRecyclerView(List<Car> cars) {
         if (cars != null && !cars.isEmpty()) {
             AdminCarListAdapter adapter = new AdminCarListAdapter(userViewModel, cars);
@@ -74,25 +72,20 @@ public class AdminFragment extends Fragment {
         }
     }
 
-    // Tüm kontroller ve gözlemlemeler burada yapılır
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Room DB oluşturuluyor (mainThread'de erişime açık)
         db = Room.databaseBuilder(requireContext(), AppDatabase.class, "car_database")
                 .allowMainThreadQueries()
                 .build();
 
-        // ViewModel tanımlamaları
         brandViewModel = new ViewModelProvider(this).get(BrandViewModel.class);
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // RecyclerView dikey liste şeklinde çalışır
         binding.recyclerViewAdminCars.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Renk Spinner'ı
         List<String> colorOptionsAdmin = new ArrayList<>();
         colorOptionsAdmin.add("Hepsi");
         colorOptionsAdmin.addAll(Arrays.asList(Constants.COLOR_OPTIONS));
@@ -100,7 +93,6 @@ public class AdminFragment extends Fragment {
         colorAdapterAdmin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerColorFilterAdmin.setAdapter(colorAdapterAdmin);
 
-        // Vites Spinner
         List<String> transmissionOptionsAdmin = new ArrayList<>();
         transmissionOptionsAdmin.add("Hepsi");
         transmissionOptionsAdmin.addAll(Arrays.asList(Constants.TRANSMISSION_OPTIONS));
@@ -108,7 +100,6 @@ public class AdminFragment extends Fragment {
         transmissionAdapterAdmin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerTransmissionFilterAdmin.setAdapter(transmissionAdapterAdmin);
 
-        // Yakıt Spinner
         List<String> fuelOptionsAdmin = new ArrayList<>();
         fuelOptionsAdmin.add("Hepsi");
         fuelOptionsAdmin.addAll(Arrays.asList(Constants.FUEL_OPTIONS));
@@ -116,7 +107,6 @@ public class AdminFragment extends Fragment {
         fuelAdapterAdmin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerFuelFilterAdmin.setAdapter(fuelAdapterAdmin);
 
-        // Şehir Spinner
         List<String> cityOptions = new ArrayList<>();
         cityOptions.add("Hepsi");
         cityOptions.addAll(Arrays.asList(Constants.CITY_OPTIONS));
@@ -124,7 +114,6 @@ public class AdminFragment extends Fragment {
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerCityAdmin.setAdapter(cityAdapter);
 
-        // Sıralama butonuna basıldığında popup menü gösterilir
         binding.btnSortAdmin.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(getContext(), binding.btnSortAdmin);
             Menu menu = popupMenu.getMenu();
@@ -149,14 +138,12 @@ public class AdminFragment extends Fragment {
             popupMenu.show();
         });
 
-        // Filtre paneli aç/kapa
         binding.btnFilterAdmin.setOnClickListener(v -> {
             binding.filterLayoutAdmin.setVisibility(
                     binding.filterLayoutAdmin.getVisibility() == View.GONE ? View.VISIBLE : View.GONE
             );
         });
 
-        // Filtreleri uygula
         binding.btnApplyFiltersAdmin.setOnClickListener(v -> {
             Brand selectedBrand = (Brand) binding.spinnerBrandsAdmin.getSelectedItem();
             int selectedBrandId = (selectedBrand != null && !"Hepsi".equals(selectedBrand.getName())) ? selectedBrand.getId() : -1;
@@ -172,7 +159,6 @@ public class AdminFragment extends Fragment {
             String selectedFuel = binding.spinnerFuelFilterAdmin.getSelectedItem().toString();
             String selectedCity = binding.spinnerCityAdmin.getSelectedItem().toString();
 
-            // Filtrelenmiş araçlar listelenir
             carViewModel.getFilteredCars(selectedBrandId, minYear, maxYear, minPrice, maxPrice, minKm, maxKm,
                             selectedColor, selectedTransmission, selectedFuel , selectedCity)
                     .observe(getViewLifecycleOwner(), this::updateRecyclerView);
@@ -180,14 +166,12 @@ public class AdminFragment extends Fragment {
             binding.filterLayoutAdmin.setVisibility(View.GONE);
         });
 
-        // Marka ekleme formu görünürlüğünü değiştir
         binding.btnGoToAdd.setOnClickListener(v -> {
             binding.addFormLayout.setVisibility(
                     binding.addFormLayout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE
             );
         });
 
-        // Marka kaydet
         binding.btnSaveBrand.setOnClickListener(v -> {
             String name = binding.etBrandName.getText().toString().trim();
             if (name.isEmpty()) {
@@ -200,11 +184,10 @@ public class AdminFragment extends Fragment {
             Toast.makeText(getContext(), "Marka eklendi", Toast.LENGTH_SHORT).show();
         });
 
-        // Spinner'a markaları yükle
         brandViewModel.getAllBrands().observe(getViewLifecycleOwner(), brands -> {
             if (brands != null && !brands.isEmpty()) {
                 List<Brand> allBrands = new ArrayList<>();
-                allBrands.add(new Brand("Hepsi")); // Hepsi filtresi
+                allBrands.add(new Brand("Hepsi"));
                 allBrands.addAll(brands);
 
                 ArrayAdapter<Brand> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, allBrands);
@@ -213,11 +196,21 @@ public class AdminFragment extends Fragment {
             }
         });
 
-        // Tüm araçları getir
         carViewModel.getAllCars().observe(getViewLifecycleOwner(), this::updateRecyclerView);
+
+
+        binding.btnLogout.setOnClickListener(v -> {
+            requireContext().getSharedPreferences("user", Context.MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .apply();
+
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_adminFragment_to_loginFragment);
+        });
+
     }
 
-    // RecyclerView içinde araçları gösteren özel adapter
     private class AdminCarListAdapter extends RecyclerView.Adapter<AdminCarListAdapter.AdminCarViewHolder> {
         private final List<Car> carList;
         private final UserViewModel userViewModel;
@@ -253,21 +246,18 @@ public class AdminFragment extends Fragment {
                 this.binding = binding;
             }
 
-            // Her araca ait bilgileri view'a bağlar
             void bind(Car car) {
                 binding.tvPrice.setText(car.price + " ₺");
                 binding.tvTitle.setText(car.title);
                 binding.tvUserId.setText("Kullanıcı ID: " + car.userId);
                 binding.tvCity.setText(car.city);
 
-                // Marka adı
                 carViewModel.getBrandById(car.brandId).observe(getViewLifecycleOwner(), brand -> {
                     if (brand != null) {
                         binding.tvBrandModel.setText(brand.name + " - " + car.model);
                     }
                 });
 
-                // Kullanıcı adı
                 userViewModel.getUserById(car.userId).observeForever(user -> {
                     if (user != null) {
                         String userInfo = "Kullanıcı Adı : " + user.getUsername();
@@ -277,7 +267,6 @@ public class AdminFragment extends Fragment {
                     }
                 });
 
-                // İlk görsel gösterilir (Base64 → byte[] → Glide)
                 if (car.imageBase64List != null && !car.imageBase64List.isEmpty()) {
                     byte[] decodedBytes = Base64.decode(car.imageBase64List.get(0), Base64.DEFAULT);
                     Glide.with(binding.getRoot().getContext())

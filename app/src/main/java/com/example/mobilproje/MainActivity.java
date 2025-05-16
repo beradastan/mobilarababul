@@ -2,7 +2,6 @@ package com.example.mobilproje;
 
 import android.os.Bundle;
 import com.example.mobilproje.util.AdminSeeder;
-import com.example.mobilproje.util.DummyDataSeeder;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
